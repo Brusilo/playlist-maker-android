@@ -11,7 +11,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
-
         <activity
             android:name="com.example.playlist_maker_android_brusilodiana.MainActivity"
             android:exported="true"
@@ -22,6 +21,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.example.playlist_maker_android_brusilodiana.SearchActivity"
+            android:exported="false"
+            android:label="@string/search_screen_title"
+            android:theme="@style/Theme.MyApplication" />
+        <activity
+            android:name="com.example.playlist_maker_android_brusilodiana.SettingsActivity"
+            android:exported="false"
+            android:label="@string/settings_screen_title"
+            android:theme="@style/Theme.MyApplication" />
 
     </application>
 

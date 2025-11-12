@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "My Application"
+rootProject.name = "playlist-maker-android-BrusiloDiana"
 include(":app")
  
