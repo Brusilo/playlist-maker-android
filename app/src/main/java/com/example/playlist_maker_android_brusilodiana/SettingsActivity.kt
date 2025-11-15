@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -14,7 +15,12 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Headset
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,7 +49,7 @@ fun SettingsScreen(onBackClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF2196F3))
+            .background(Color.White)
     ) {
         TopAppBar(
             title = { Text(stringResource(R.string.settings_screen_title), color = Color.Black, fontSize = 20.sp) },
@@ -64,13 +70,15 @@ fun SettingsScreen(onBackClick: () -> Unit) {
                 )
                 .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(stringResource(R.string.dark_theme), fontSize = 16.sp)
+                    Text(stringResource(R.string.dark_theme), fontSize = 18.sp)
                     Switch(
                         checked = isDarkTheme,
                         onCheckedChange = { isDarkTheme = it }
@@ -78,29 +86,38 @@ fun SettingsScreen(onBackClick: () -> Unit) {
                 }
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .clickable { },
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(stringResource(R.string.share_app), fontSize = 16.sp)
+                    Text(stringResource(R.string.share_app), fontSize = 18.sp)
                     Icon(Icons.Filled.Share, contentDescription = null)
                 }
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .clickable { },
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(stringResource(R.string.support), fontSize = 16.sp)
+                    Text(stringResource(R.string.support), fontSize = 18.sp)
                     Icon(Icons.Filled.Headset, contentDescription = null)
                 }
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .clickable { },
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(stringResource(R.string.user_agreement), fontSize = 16.sp)
+                    Text(stringResource(R.string.user_agreement), fontSize = 18.sp)
                     Icon(Icons.Filled.ChevronRight, contentDescription = null)
                 }
             }
