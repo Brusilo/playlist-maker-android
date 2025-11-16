@@ -9,4 +9,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="search_field_bg">#E9EBEE</color>
+    <color name="chevron_grey">#606060</color>
 </resources>

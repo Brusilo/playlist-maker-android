@@ -87,7 +87,8 @@ fun SearchScreen(onBackClick: () -> Unit) {
                 leadingIcon = {
                     Icon(
                         Icons.Default.Search,
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = Color.Black
                     )
                 },
                 trailingIcon = {
@@ -96,12 +97,20 @@ fun SearchScreen(onBackClick: () -> Unit) {
                             query = ""
                             results = emptyList()
                         }) {
-                            Icon(Icons.Default.Clear, contentDescription = null)
+                            Icon(
+                                Icons.Default.Clear,
+                                contentDescription = null,
+                                tint = Color.Black
+                            )
                         }
                     }
                 },
                 shape = RoundedCornerShape(8.dp),
                 colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    focusedPlaceholderColor = Color.Gray,
+                    unfocusedPlaceholderColor = Color.Gray,
                     focusedContainerColor = colorResource(R.color.search_field_bg),
                     unfocusedContainerColor = colorResource(R.color.search_field_bg),
                     focusedBorderColor = Color.Transparent,
@@ -112,7 +121,7 @@ fun SearchScreen(onBackClick: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
 
             if (results.isNotEmpty()) {
-                Text("Результатов: ${results.size}")
+                Text("Результатов: ${results.size}", color = Color.Black)
             }
         }
     }

@@ -14,4 +14,9 @@
     <string name="support">Написать в поддержку</string>
     <string name="user_agreement">Пользовательское соглашение</string>
     <string name="back_button">Назад</string>
+    <string name="share_message">Попробуй приложение Playlist Maker!</string>
+    <string name="email_to">brusilodiana@yandex.ru</string>
+    <string name="email_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="email_body">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="agreement_url">https://yandex.ru/legal/praktikum_offer/07022019/</string>
 </resources>

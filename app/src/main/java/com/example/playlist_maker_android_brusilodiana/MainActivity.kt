@@ -127,7 +127,7 @@ fun MenuItem(
         Icon(
             imageVector = Icons.Filled.ChevronRight,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+            tint = colorResource(R.color.chevron_grey),
             modifier = Modifier.size(20.dp)
         )
     }
