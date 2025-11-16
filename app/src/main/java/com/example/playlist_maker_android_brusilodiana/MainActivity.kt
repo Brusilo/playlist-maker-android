@@ -27,23 +27,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.playlist_maker_android_brusilodiana.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyApplicationTheme {
-                MainScreen()
-            }
+            MainScreen(
+                onNavigateToSearch = {
+                    startActivity(Intent(this, SearchActivity::class.java))
+                },
+                onNavigateToSettings = {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                }
+            )
         }
     }
 }
 
 @Composable
-fun MainScreen() {
-    val context = LocalContext.current
-
+fun MainScreen(
+    onNavigateToSearch: () -> Unit,
+    onNavigateToSettings: () -> Unit
+) {
     val title = stringResource(R.string.main_screen_title)
     val search = stringResource(R.string.search_button)
     val playlists = stringResource(R.string.playlists_button)
@@ -83,14 +88,10 @@ fun MainScreen() {
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            MenuItem(search, Icons.Default.Search) {
-                context.startActivity(Intent(context, SearchActivity::class.java))
-            }
+            MenuItem(search, Icons.Default.Search) { onNavigateToSearch() }
             MenuItem(playlists, Icons.Default.List) { }
             MenuItem(favorites, Icons.Default.Favorite) { }
-            MenuItem(settings, Icons.Default.Settings) {
-                context.startActivity(Intent(context, SettingsActivity::class.java))
-            }
+            MenuItem(settings, Icons.Default.Settings) { onNavigateToSettings() }
         }
     }
 }
