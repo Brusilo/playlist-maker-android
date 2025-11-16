@@ -117,7 +117,7 @@ fun SettingsScreen(onBackClick: () -> Unit) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(stringResource(R.string.user_agreement), fontSize = 16.sp)
+                    Text(stringResource(R.string.user_agreement), fontSize = 18.sp)
                     Icon(Icons.Filled.ChevronRight, contentDescription = null)
                 }
             }
