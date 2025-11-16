@@ -1,5 +1,4 @@
 @file:OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
-
 package com.example.playlist_maker_android_brusilodiana
 
 import android.os.Bundle
@@ -40,7 +39,6 @@ class SearchActivity : ComponentActivity() {
 @Composable
 fun SearchScreen(onBackClick: () -> Unit) {
     var query by remember { mutableStateOf(TextFieldValue("")) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -66,7 +64,6 @@ fun SearchScreen(onBackClick: () -> Unit) {
                 containerColor = colorResource(R.color.white)
             )
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
