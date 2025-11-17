@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.playlist_maker_android_brusilodiana
+package com.example.playlist_maker_android_brusilodiana.ui.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -21,6 +21,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.ui.theme.MyApplicationTheme
 
 class SearchActivity : ComponentActivity() {
@@ -121,7 +122,10 @@ fun SearchScreen(onBackClick: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
 
             if (results.isNotEmpty()) {
-                Text("Результатов: ${results.size}", color = Color.Black)
+                Text(
+                    stringResource(R.string.results_count, results.size),
+                    color = Color.Black
+                )
             }
         }
     }

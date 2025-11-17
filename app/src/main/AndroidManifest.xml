@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
-            android:name="com.example.playlist_maker_android_brusilodiana.MainActivity"
+            android:name="com.example.playlist_maker_android_brusilodiana.ui.activity.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.MyApplication">
@@ -22,12 +22,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.playlist_maker_android_brusilodiana.SearchActivity"
+            android:name="com.example.playlist_maker_android_brusilodiana.ui.activity.SearchActivity"
             android:exported="false"
             android:label="@string/search_screen_title"
             android:theme="@style/Theme.MyApplication" />
         <activity
-            android:name="com.example.playlist_maker_android_brusilodiana.SettingsActivity"
+            android:name="com.example.playlist_maker_android_brusilodiana.ui.activity.SettingsActivity"
             android:exported="false"
             android:label="@string/settings_screen_title"
             android:theme="@style/Theme.MyApplication" />

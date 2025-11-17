@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.playlist_maker_android_brusilodiana
+package com.example.playlist_maker_android_brusilodiana.ui.activity
 
 import android.content.Intent
 import android.net.Uri
@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.ui.theme.MyApplicationTheme
 
 class SettingsActivity : ComponentActivity() {
