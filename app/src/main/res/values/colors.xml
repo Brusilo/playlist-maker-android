@@ -10,4 +10,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="search_field_bg">#E9EBEE</color>
     <color name="chevron_grey">#606060</color>
+    <color name="pressed_background">#20000000</color>
 </resources>

@@ -20,4 +20,11 @@
     <string name="email_body">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="agreement_url">https://yandex.ru/legal/praktikum_offer/07022019/</string>
     <string name="results_count">Результатов: %1$d</string>
+    <string name="track_image_description">Обложка трека %s</string>
+    <string name="search_icon">Поиск</string>
+    <string name="clear_search">Очистить поиск</string>
+    <string name="enter_search_query">Введите запрос для поиска</string>
+    <string name="no_results">Ничего не нашлось</string>
+    <string name="search_error">Ошибка: %s</string>
+    <string name="dot_separator">•</string>
 </resources>

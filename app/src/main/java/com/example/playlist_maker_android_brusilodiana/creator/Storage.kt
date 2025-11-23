@@ -19,7 +19,8 @@ class Storage {
 
     fun search(request: String): List<TrackDto> {
         return listTracks.filter {
-            it.trackName.lowercase().contains(request.lowercase())
+            it.trackName.lowercase().contains(request.lowercase()) ||
+                    it.artistName.lowercase().contains(request.lowercase())
         }
     }
 }

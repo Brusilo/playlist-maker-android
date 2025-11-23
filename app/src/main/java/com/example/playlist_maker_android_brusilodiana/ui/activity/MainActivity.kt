@@ -1,7 +1,7 @@
 package com.example.playlist_maker_android_brusilodiana.ui.activity
 
-import android.os.Bundle
 import android.content.Intent
+import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -34,6 +35,7 @@ import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.ui.Screen
 import com.example.playlist_maker_android_brusilodiana.ui.SearchScreen
 import com.example.playlist_maker_android_brusilodiana.ui.SettingsScreen
+import com.example.playlist_maker_android_brusilodiana.ui.view_model.SearchViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,7 +99,13 @@ fun AppNavigation() {
         }
 
         composable(Screen.Search.route) {
-            SearchScreen(onBackClick = { navigateUp() })
+            val searchViewModel: SearchViewModel = viewModel(
+                factory = SearchViewModel.getViewModelFactory()
+            )
+            SearchScreen(
+                onBackClick = { navigateUp() },
+                viewModel = searchViewModel
+            )
         }
 
         composable(Screen.Settings.route) {

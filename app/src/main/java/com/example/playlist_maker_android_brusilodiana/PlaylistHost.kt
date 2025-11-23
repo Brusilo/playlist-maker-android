@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,6 +13,7 @@ import androidx.core.content.ContextCompat.startActivity
 import com.example.playlist_maker_android_brusilodiana.ui.Screen
 import com.example.playlist_maker_android_brusilodiana.ui.SearchScreen
 import com.example.playlist_maker_android_brusilodiana.ui.SettingsScreen
+import com.example.playlist_maker_android_brusilodiana.ui.view_model.SearchViewModel
 
 @Composable
 fun PlaylistHost(navController: NavHostController) {
@@ -65,7 +67,13 @@ fun PlaylistHost(navController: NavHostController) {
         }
 
         composable(Screen.Search.route) {
-            SearchScreen(onBackClick = { navigateUp() })
+            val searchViewModel: SearchViewModel = viewModel(
+                factory = SearchViewModel.getViewModelFactory()
+            )
+            SearchScreen(
+                onBackClick = { navigateUp() },
+                viewModel = searchViewModel
+            )
         }
 
         composable(Screen.Settings.route) {
