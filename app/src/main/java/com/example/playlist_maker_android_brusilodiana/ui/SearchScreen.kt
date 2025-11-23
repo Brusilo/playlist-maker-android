@@ -97,7 +97,7 @@ fun SearchScreen(
                                 keyboardController?.hide()
                             }
                         },
-                        imageVector = Icons.Default.Search,
+                        imageVector = Icons.Filled.Search,
                         contentDescription = stringResource(R.string.search_icon),
                         tint = Color.Black
                     )
@@ -106,9 +106,10 @@ fun SearchScreen(
                     if (query.isNotEmpty()) {
                         IconButton(onClick = {
                             query = ""
+                            viewModel.clearSearch()
                         }) {
                             Icon(
-                                Icons.Default.Clear,
+                                Icons.Filled.Clear,
                                 contentDescription = stringResource(R.string.clear_search),
                                 tint = Color.Black
                             )
@@ -164,7 +165,7 @@ fun SearchScreen(
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(top = 80.dp),
+                                .padding(top = 32.dp),
                             contentAlignment = Alignment.TopCenter
                         ) {
                             Column(

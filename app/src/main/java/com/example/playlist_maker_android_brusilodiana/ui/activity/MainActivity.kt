@@ -163,10 +163,10 @@ fun MainScreen(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            MenuItem(search, Icons.Default.Search) { onNavigateToSearch() }
-            MenuItem(playlists, Icons.Default.List) { }
-            MenuItem(favorites, Icons.Default.Favorite) { }
-            MenuItem(settings, Icons.Default.Settings) { onNavigateToSettings() }
+            MenuItem(search, Icons.Filled.Search) { onNavigateToSearch() }
+            MenuItem(playlists, Icons.Filled.List) { }
+            MenuItem(favorites, Icons.Filled.Favorite) { }
+            MenuItem(settings, Icons.Filled.Settings) { onNavigateToSettings() }
         }
     }
 }
