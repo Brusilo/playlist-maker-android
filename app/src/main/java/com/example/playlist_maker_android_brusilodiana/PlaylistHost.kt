@@ -10,8 +10,8 @@ import androidx.navigation.compose.composable
 import com.example.playlist_maker_android_brusilodiana.ui.activity.MainScreen
 import androidx.core.content.ContextCompat.startActivity
 import com.example.playlist_maker_android_brusilodiana.ui.Screen
-import com.example.playlist_maker_android_brusilodiana.ui.activity.SearchScreen
-import com.example.playlist_maker_android_brusilodiana.ui.activity.SettingsScreen
+import com.example.playlist_maker_android_brusilodiana.ui.SearchScreen
+import com.example.playlist_maker_android_brusilodiana.ui.SettingsScreen
 
 @Composable
 fun PlaylistHost(navController: NavHostController) {

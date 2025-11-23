@@ -1,11 +1,7 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.playlist_maker_android_brusilodiana.ui.activity
+package com.example.playlist_maker_android_brusilodiana.ui
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,19 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.playlist_maker_android_brusilodiana.R
-import com.example.playlist_maker_android_brusilodiana.ui.theme.MyApplicationTheme
-
-class SearchActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            MyApplicationTheme {
-                SearchScreen(onBackClick = { finish() })
-            }
-        }
-    }
-}
 
 @Composable
 fun SearchScreen(onBackClick: () -> Unit) {
