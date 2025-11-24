@@ -76,7 +76,7 @@ fun TrackListItemNew(
         }
         Icon(
             imageVector = Icons.Filled.ChevronRight,
-            contentDescription = "Стрелка",
+            contentDescription = stringResource(R.string.arrow),
             tint = colorResource(R.color.chevron_grey),
             modifier = Modifier.size(20.dp)
         )
