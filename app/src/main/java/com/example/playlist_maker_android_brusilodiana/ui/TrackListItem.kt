@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.playlist_maker_android_brusilodiana.R
-import com.example.playlist_maker_android_brusilodiana.data.network.Track
+import com.example.playlist_maker_android_brusilodiana.domain.models.Track
 import androidx.compose.foundation.clickable
 
 @Composable

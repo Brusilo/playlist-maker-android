@@ -1,6 +1,6 @@
 package com.example.playlist_maker_android_brusilodiana.data.network
 
-import com.example.playlist_maker_android_brusilodiana.data.network.Track
+import com.example.playlist_maker_android_brusilodiana.domain.models.Track
 import com.example.playlist_maker_android_brusilodiana.data.dto.TracksSearchRequest
 import com.example.playlist_maker_android_brusilodiana.data.dto.TracksSearchResponse
 import com.example.playlist_maker_android_brusilodiana.domain.NetworkClient

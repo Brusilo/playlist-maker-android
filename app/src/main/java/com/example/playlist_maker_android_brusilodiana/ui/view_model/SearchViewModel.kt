@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.playlist_maker_android_brusilodiana.creator.Creator
 import com.example.playlist_maker_android_brusilodiana.domain.TracksRepository
-import com.example.playlist_maker_android_brusilodiana.ui.SearchState
+import com.example.playlist_maker_android_brusilodiana.domain.states.SearchState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -1,6 +1,6 @@
-package com.example.playlist_maker_android_brusilodiana.ui
+package com.example.playlist_maker_android_brusilodiana.domain.states
 
-import com.example.playlist_maker_android_brusilodiana.data.network.Track
+import com.example.playlist_maker_android_brusilodiana.domain.models.Track
 
 sealed class SearchState {
     object Initial : SearchState()
