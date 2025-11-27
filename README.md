@@ -37,8 +37,15 @@
 - Интегрирована обработка ввода с клавиатуры (Enter для поиска)
 - Реализована корректная обработка всех состояний UI с индикаторами загрузки и ошибок
 
+### Sprint-7:
+- Добавлен экран плейлистов с навигацией
+- Реализована FloatingActionButton для создания плейлистов
+- Интегрирован ModalBottomSheet, открывающийся по нажатию FAB
+- Расширена навигационная система новым маршрутом
+
 ## Чек-листы
 - [Sprint-3](checklists/sprint-3.md)
 - [Sprint-4](checklists/sprint-4.md)
 - [Sprint-5](checklists/sprint-5.md)
 - [Sprint-6](checklists/sprint-6.md)
+- [Sprint-7](checklists/sprint-7.md)
