@@ -27,4 +27,8 @@
     <string name="search_error">Ошибка: %s</string>
     <string name="dot_separator">•</string>
     <string name="arrow">Стрелка</string>
+    <string name="playlists_screen_title">Плейлисты</string>
+    <string name="add_playlist">Добавить плейлист</string>
+    <string name="create_new_playlist">Создание нового плейлиста</string>
+    <string name="playlist_creation_form">Здесь будет форма создания плейлиста</string>
 </resources>

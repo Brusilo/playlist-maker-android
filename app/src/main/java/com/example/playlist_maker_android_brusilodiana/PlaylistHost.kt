@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat.startActivity
 import com.example.playlist_maker_android_brusilodiana.ui.Screen
 import com.example.playlist_maker_android_brusilodiana.ui.SearchScreen
 import com.example.playlist_maker_android_brusilodiana.ui.SettingsScreen
+import com.example.playlist_maker_android_brusilodiana.ui.PlaylistsScreen
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.SearchViewModel
 
 @Composable
@@ -62,7 +63,8 @@ fun PlaylistHost(navController: NavHostController) {
         composable(Screen.Main.route) {
             MainScreen(
                 onNavigateToSearch = { navigateTo(Screen.Search) },
-                onNavigateToSettings = { navigateTo(Screen.Settings) }
+                onNavigateToSettings = { navigateTo(Screen.Settings) },
+                onNavigateToPlaylists = { navigateTo(Screen.Playlists) }
             )
         }
 
@@ -82,6 +84,12 @@ fun PlaylistHost(navController: NavHostController) {
                 onShareClick = { shareApp() },
                 onSupportClick = { writeToSupport() },
                 onAgreementClick = { openAgreement() }
+            )
+        }
+
+        composable(Screen.Playlists.route) {
+            PlaylistsScreen(
+                onBackClick = { navigateUp() }
             )
         }
     }

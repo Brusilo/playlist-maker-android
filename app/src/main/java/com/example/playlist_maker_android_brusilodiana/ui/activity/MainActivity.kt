@@ -35,6 +35,7 @@ import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.ui.Screen
 import com.example.playlist_maker_android_brusilodiana.ui.SearchScreen
 import com.example.playlist_maker_android_brusilodiana.ui.SettingsScreen
+import com.example.playlist_maker_android_brusilodiana.ui.PlaylistsScreen
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.SearchViewModel
 
 class MainActivity : ComponentActivity() {
@@ -94,7 +95,8 @@ fun AppNavigation() {
         composable(Screen.Main.route) {
             MainScreen(
                 onNavigateToSearch = { navigateTo(Screen.Search) },
-                onNavigateToSettings = { navigateTo(Screen.Settings) }
+                onNavigateToSettings = { navigateTo(Screen.Settings) },
+                onNavigateToPlaylists = { navigateTo(Screen.Playlists) }
             )
         }
 
@@ -116,13 +118,20 @@ fun AppNavigation() {
                 onAgreementClick = { openAgreement() }
             )
         }
+
+        composable(Screen.Playlists.route) {
+            PlaylistsScreen(
+                onBackClick = { navigateUp() }
+            )
+        }
     }
 }
 
 @Composable
 fun MainScreen(
     onNavigateToSearch: () -> Unit,
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit,
+    onNavigateToPlaylists: () -> Unit
 ) {
     val title = stringResource(R.string.main_screen_title)
     val search = stringResource(R.string.search_button)
@@ -164,7 +173,7 @@ fun MainScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             MenuItem(search, Icons.Filled.Search) { onNavigateToSearch() }
-            MenuItem(playlists, Icons.Filled.List) { }
+            MenuItem(playlists, Icons.Filled.List) { onNavigateToPlaylists() }
             MenuItem(favorites, Icons.Filled.Favorite) { }
             MenuItem(settings, Icons.Filled.Settings) { onNavigateToSettings() }
         }
