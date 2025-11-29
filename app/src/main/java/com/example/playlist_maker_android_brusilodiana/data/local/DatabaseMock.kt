@@ -87,7 +87,10 @@ class DatabaseMock(
     fun deleteTracksByPlaylistId(playlistId: Long) {
         tracks.removeIf { it.playlistId == playlistId }
     }
-
+    fun getTrackById(trackId: Long): Flow<Track?> = flow {
+        val track = tracks.find { it.id == trackId }
+        emit(track)
+    }
     fun searchTracks(expression: String): List<Track> {
         return tracks.filter { it.trackName.contains(expression, true) }
     }

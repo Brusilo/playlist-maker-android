@@ -15,7 +15,6 @@ class PlaylistViewModel : ViewModel() {
     private val tracksRepository = Creator.getTracksRepository()
 
     val playlists: Flow<List<Playlist>> = playlistsRepository.getAllPlaylists()
-
     val favoriteTracks: Flow<List<Track>> = tracksRepository.getFavoriteTracks()
 
     fun createNewPlaylist(name: String, description: String) {
@@ -30,6 +29,9 @@ class PlaylistViewModel : ViewModel() {
 
     suspend fun toggleFavorite(track: Track, isFavorite: Boolean) {
         tracksRepository.updateTrackFavoriteStatus(track, isFavorite)
+    }
+    fun getTrackById(trackId: Long): Flow<Track?> {
+        return tracksRepository.getTrackById(trackId)
     }
 
     suspend fun isTrackExist(track: Track): Track? {

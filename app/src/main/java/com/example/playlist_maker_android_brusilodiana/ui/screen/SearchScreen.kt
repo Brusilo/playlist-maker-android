@@ -46,14 +46,14 @@ fun SearchScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(colorResource(id = R.color.white))
     ) {
 
         TopAppBar(
             title = {
                 Text(
                     stringResource(R.string.search_screen_title),
-                    color = Color.Black,
+                    color = colorResource(id = R.color.black),
                     fontSize = 20.sp
                 )
             },
@@ -62,12 +62,12 @@ fun SearchScreen(
                     Icon(
                         Icons.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.back_button),
-                        tint = Color.Black
+                        tint = colorResource(id = R.color.black)
                     )
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.White
+                containerColor = colorResource(id = R.color.white)
             )
         )
 
@@ -104,7 +104,7 @@ fun SearchScreen(
                         },
                         imageVector = Icons.Filled.Search,
                         contentDescription = stringResource(R.string.search_icon),
-                        tint = Color.Black
+                        tint = colorResource(id = R.color.black)
                     )
                 },
                 trailingIcon = {
@@ -116,17 +116,17 @@ fun SearchScreen(
                             Icon(
                                 Icons.Filled.Clear,
                                 contentDescription = stringResource(R.string.clear_search),
-                                tint = Color.Black
+                                tint = colorResource(id = R.color.black)
                             )
                         }
                     }
                 },
                 shape = RoundedCornerShape(8.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = Color.Black,
-                    unfocusedTextColor = Color.Black,
-                    focusedPlaceholderColor = Color.Gray,
-                    unfocusedPlaceholderColor = Color.Gray,
+                    focusedTextColor = colorResource(id = R.color.black),
+                    unfocusedTextColor = colorResource(id = R.color.black),
+                    focusedPlaceholderColor = colorResource(id = R.color.gray),
+                    unfocusedPlaceholderColor = colorResource(id = R.color.gray),
                     focusedContainerColor = colorResource(R.color.search_field_bg),
                     unfocusedContainerColor = colorResource(R.color.search_field_bg),
                     focusedBorderColor = Color.Transparent,
@@ -183,7 +183,7 @@ fun SearchScreen(
                                 )
                                 Text(
                                     stringResource(R.string.no_results),
-                                    color = Color.Black,
+                                    color = colorResource(id = R.color.black),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -202,7 +202,7 @@ fun SearchScreen(
                     ) {
                         Text(
                             stringResource(R.string.search_error, error),
-                            color = Color.Red
+                            color = colorResource(id = R.color.red)
                         )
                     }
                 }

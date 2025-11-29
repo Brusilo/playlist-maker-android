@@ -140,9 +140,9 @@ fun PlaylistHost(navController: NavHostController) {
         }
 
         composable(Screen.TrackDetails.route) {
-            val trackName = navController.previousBackStackEntry?.savedStateHandle?.get<String>("trackName") ?: "Название трека"
-            val artistName = navController.previousBackStackEntry?.savedStateHandle?.get<String>("artistName") ?: "Исполнитель"
-            val trackTime = navController.previousBackStackEntry?.savedStateHandle?.get<String>("trackTime") ?: "03:45"
+            val trackName = navController.previousBackStackEntry?.savedStateHandle?.get<String>("trackName") ?: ""
+            val artistName = navController.previousBackStackEntry?.savedStateHandle?.get<String>("artistName") ?: ""
+            val trackTime = navController.previousBackStackEntry?.savedStateHandle?.get<String>("trackTime") ?: ""
             val favorite = navController.previousBackStackEntry?.savedStateHandle?.get<Boolean>("favorite") ?: false
 
             val track = Track(
