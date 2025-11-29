@@ -38,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -60,8 +61,9 @@ fun TrackDetailsScreen(
     track: Track,
     onBackClick: () -> Unit
 ) {
+    val context = LocalContext.current
     val playlistViewModel: PlaylistViewModel = viewModel(
-        factory = Creator.getPlaylistViewModelFactory()
+        factory = Creator.getPlaylistViewModelFactory(context)
     )
 
     var showPlaylistSheet by remember { mutableStateOf(false) }
@@ -235,8 +237,9 @@ fun TrackPlaylistSelectionBottomSheet(
     onDismissRequest: () -> Unit,
     onPlaylistSelected: (Long) -> Unit
 ) {
+    val context = LocalContext.current
     val playlistViewModel: PlaylistViewModel = viewModel(
-        factory = Creator.getPlaylistViewModelFactory()
+        factory = Creator.getPlaylistViewModelFactory(context)
     )
     val playlists by playlistViewModel.playlists.collectAsState(emptyList())
     val sheetState = rememberModalBottomSheetState()

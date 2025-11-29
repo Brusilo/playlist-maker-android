@@ -1,5 +1,6 @@
 package com.example.playlist_maker_android_brusilodiana.ui.view_model
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -35,11 +36,11 @@ class SearchViewModel(
     }
 
     companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory =
+        fun getViewModelFactory(context: Context): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SearchViewModel(Creator.getTracksRepository()) as T
+                    return SearchViewModel(Creator.getTracksRepository(context)) as T
                 }
             }
     }

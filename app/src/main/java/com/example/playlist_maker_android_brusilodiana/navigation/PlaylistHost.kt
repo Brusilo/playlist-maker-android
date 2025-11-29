@@ -76,7 +76,7 @@ fun PlaylistHost(navController: NavHostController) {
 
         composable(Screen.Search.route) {
             val searchViewModel: SearchViewModel = viewModel(
-                factory = SearchViewModel.getViewModelFactory()
+                factory = SearchViewModel.getViewModelFactory(context) // Исправлено здесь
             )
             SearchScreen(
                 onBackClick = { navigateUp() },
@@ -99,6 +99,9 @@ fun PlaylistHost(navController: NavHostController) {
         }
 
         composable(Screen.Playlists.route) {
+            val playlistViewModel: PlaylistViewModel = viewModel(
+                factory = Creator.getPlaylistViewModelFactory(context)
+            )
             PlaylistsScreen(
                 onBackClick = { navigateUp() },
                 onCreateNewPlaylist = { navigateTo(Screen.CreatePlaylist) },
@@ -109,6 +112,9 @@ fun PlaylistHost(navController: NavHostController) {
         }
 
         composable(Screen.Favorites.route) {
+            val playlistViewModel: PlaylistViewModel = viewModel(
+                factory = Creator.getPlaylistViewModelFactory(context)
+            )
             FavoritesScreen(
                 onBackClick = { navigateUp() },
                 onTrackClick = { track ->
@@ -121,7 +127,7 @@ fun PlaylistHost(navController: NavHostController) {
 
         composable(Screen.CreatePlaylist.route) {
             val playlistViewModel: PlaylistViewModel = viewModel(
-                factory = Creator.getPlaylistViewModelFactory()
+                factory = Creator.getPlaylistViewModelFactory(context)
             )
 
             CreatePlaylistScreen(
@@ -140,6 +146,10 @@ fun PlaylistHost(navController: NavHostController) {
             val artistName = backStackEntry.arguments?.getString("artistName") ?: ""
             val trackTime = backStackEntry.arguments?.getString("trackTime") ?: ""
             val favorite = backStackEntry.arguments?.getString("favorite")?.toBoolean() ?: false
+
+            val playlistViewModel: PlaylistViewModel = viewModel(
+                factory = Creator.getPlaylistViewModelFactory(context)
+            )
 
             TrackDetailsScreen(
                 track = com.example.playlist_maker_android_brusilodiana.domain.models.Track(

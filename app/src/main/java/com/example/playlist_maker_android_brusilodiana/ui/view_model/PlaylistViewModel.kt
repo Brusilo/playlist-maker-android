@@ -1,5 +1,6 @@
 package com.example.playlist_maker_android_brusilodiana.ui.view_model
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlist_maker_android_brusilodiana.creator.Creator
@@ -10,9 +11,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class PlaylistViewModel : ViewModel() {
-    private val playlistsRepository = Creator.getPlaylistsRepository()
-    private val tracksRepository = Creator.getTracksRepository()
+class PlaylistViewModel(private val context: Context) : ViewModel() {
+    private val playlistsRepository = Creator.getPlaylistsRepository(context)
+    private val tracksRepository = Creator.getTracksRepository(context)
 
     val playlists: Flow<List<Playlist>> = playlistsRepository.getAllPlaylists()
     val favoriteTracks: Flow<List<Track>> = tracksRepository.getFavoriteTracks()

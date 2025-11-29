@@ -1,5 +1,6 @@
 package com.example.playlist_maker_android_brusilodiana.data.network
 
+import android.content.Context
 import com.example.playlist_maker_android_brusilodiana.data.local.DatabaseMock
 import com.example.playlist_maker_android_brusilodiana.domain.models.Track
 import com.example.playlist_maker_android_brusilodiana.data.dto.TracksSearchRequest
@@ -12,10 +13,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
 class TracksRepositoryImpl(
-    private val networkClient: NetworkClient
+    private val networkClient: NetworkClient,
+    private val context: Context
 ) : TracksRepository {
 
-    private val database = DatabaseMock.getInstance()
+    private val database = DatabaseMock.getInstance(context)
     private val searchResults = mutableListOf<Track>()
 
     override suspend fun searchTracks(expression: String): List<Track> {
@@ -39,7 +41,6 @@ class TracksRepositoryImpl(
                 searchResults.clear()
                 searchResults.addAll(tracks)
 
-
                 tracks.forEach { track ->
                     saveTrackIfNotExists(track)
                 }
@@ -50,10 +51,8 @@ class TracksRepositoryImpl(
     private suspend fun saveTrackIfNotExists(track: Track) {
         val existingTrack = database.getTrackByNameAndArtist(track).first()
         if (existingTrack == null) {
-
             database.insertTrack(track)
         } else {
-
             val updatedTrack = track.copy(
                 id = existingTrack.id,
                 favorite = existingTrack.favorite
@@ -86,13 +85,11 @@ class TracksRepositoryImpl(
     }
 
     override suspend fun updateTrackFavoriteStatus(track: Track, isFavorite: Boolean) {
-
         val trackFromSearch = searchResults.find {
             it.trackName == track.trackName && it.artistName == track.artistName
         }
 
         if (trackFromSearch != null) {
-
             val updatedTrack = trackFromSearch.copy(favorite = isFavorite)
             database.insertTrack(updatedTrack)
         } else {
