@@ -10,12 +10,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.playlist_maker_android_brusilodiana.ui.activity.MainScreen
 import androidx.core.content.ContextCompat.startActivity
-import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.navigation.Screen
+import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.ui.screen.SearchScreen
 import com.example.playlist_maker_android_brusilodiana.ui.screen.SettingsScreen
 import com.example.playlist_maker_android_brusilodiana.ui.screen.PlaylistsScreen
+import com.example.playlist_maker_android_brusilodiana.ui.screen.FavoritesScreen
+import com.example.playlist_maker_android_brusilodiana.ui.screen.CreatePlaylistScreen
+import com.example.playlist_maker_android_brusilodiana.ui.screen.TrackDetailsScreen
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.SearchViewModel
+import com.example.playlist_maker_android_brusilodiana.ui.view_model.PlaylistViewModel
+import com.example.playlist_maker_android_brusilodiana.creator.Creator
+import com.example.playlist_maker_android_brusilodiana.domain.models.Track
 
 @Composable
 fun PlaylistHost(navController: NavHostController) {
@@ -65,7 +71,8 @@ fun PlaylistHost(navController: NavHostController) {
             MainScreen(
                 onNavigateToSearch = { navigateTo(Screen.Search) },
                 onNavigateToSettings = { navigateTo(Screen.Settings) },
-                onNavigateToPlaylists = { navigateTo(Screen.Playlists) }
+                onNavigateToPlaylists = { navigateTo(Screen.Playlists) },
+                onNavigateToFavorites = { navigateTo(Screen.Favorites) }
             )
         }
 
@@ -75,7 +82,14 @@ fun PlaylistHost(navController: NavHostController) {
             )
             SearchScreen(
                 onBackClick = { navigateUp() },
-                viewModel = searchViewModel
+                viewModel = searchViewModel,
+                onTrackClick = { track ->
+                    navController.currentBackStackEntry?.savedStateHandle?.set("trackName", track.trackName)
+                    navController.currentBackStackEntry?.savedStateHandle?.set("artistName", track.artistName)
+                    navController.currentBackStackEntry?.savedStateHandle?.set("trackTime", track.trackTime)
+                    navController.currentBackStackEntry?.savedStateHandle?.set("favorite", track.favorite)
+                    navigateTo(Screen.TrackDetails)
+                }
             )
         }
 
@@ -90,6 +104,56 @@ fun PlaylistHost(navController: NavHostController) {
 
         composable(Screen.Playlists.route) {
             PlaylistsScreen(
+                onBackClick = { navigateUp() },
+                onCreateNewPlaylist = { navigateTo(Screen.CreatePlaylist) },
+                onPlaylistClick = { playlistId ->
+                    println("Playlist clicked: $playlistId")
+                }
+            )
+        }
+
+        composable(Screen.Favorites.route) {
+            FavoritesScreen(
+                onBackClick = { navigateUp() },
+                onTrackClick = { track ->
+                    navController.currentBackStackEntry?.savedStateHandle?.set("trackName", track.trackName)
+                    navController.currentBackStackEntry?.savedStateHandle?.set("artistName", track.artistName)
+                    navController.currentBackStackEntry?.savedStateHandle?.set("trackTime", track.trackTime)
+                    navController.currentBackStackEntry?.savedStateHandle?.set("favorite", track.favorite)
+                    navigateTo(Screen.TrackDetails)
+                }
+            )
+        }
+
+        composable(Screen.CreatePlaylist.route) {
+            val playlistViewModel: PlaylistViewModel = viewModel(
+                factory = Creator.getPlaylistViewModelFactory()
+            )
+
+            CreatePlaylistScreen(
+                onBackClick = { navigateUp() },
+                onCreatePlaylist = { name, description ->
+                    playlistViewModel.createNewPlaylist(name, description)
+                    navigateUp()
+                }
+            )
+        }
+
+        composable(Screen.TrackDetails.route) {
+            val trackName = navController.previousBackStackEntry?.savedStateHandle?.get<String>("trackName") ?: "Название трека"
+            val artistName = navController.previousBackStackEntry?.savedStateHandle?.get<String>("artistName") ?: "Исполнитель"
+            val trackTime = navController.previousBackStackEntry?.savedStateHandle?.get<String>("trackTime") ?: "03:45"
+            val favorite = navController.previousBackStackEntry?.savedStateHandle?.get<Boolean>("favorite") ?: false
+
+            val track = Track(
+                trackName = trackName,
+                artistName = artistName,
+                trackTime = trackTime,
+                favorite = favorite
+            )
+
+            TrackDetailsScreen(
+                track = track,
                 onBackClick = { navigateUp() }
             )
         }

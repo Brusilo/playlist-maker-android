@@ -36,7 +36,8 @@ import com.example.playlist_maker_android_brusilodiana.ui.view_model.SearchViewM
 @Composable
 fun SearchScreen(
     onBackClick: () -> Unit,
-    viewModel: SearchViewModel
+    viewModel: SearchViewModel,
+    onTrackClick: (com.example.playlist_maker_android_brusilodiana.domain.models.Track) -> Unit
 ) {
     val screenState by viewModel.searchScreenState.collectAsStateWithLifecycle()
     var query by remember { mutableStateOf("") }
@@ -160,8 +161,7 @@ fun SearchScreen(
                             items(tracks.size) { index ->
                                 TrackListItemNew(
                                     track = tracks[index],
-                                    onTrackClick = {
-                                    }
+                                    onTrackClick = { onTrackClick(tracks[index]) }
                                 )
                             }
                         }

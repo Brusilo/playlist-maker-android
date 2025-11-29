@@ -44,7 +44,8 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(
     onNavigateToSearch: () -> Unit,
     onNavigateToSettings: () -> Unit,
-    onNavigateToPlaylists: () -> Unit
+    onNavigateToPlaylists: () -> Unit,
+    onNavigateToFavorites: () -> Unit
 ) {
     val title = stringResource(R.string.main_screen_title)
     val search = stringResource(R.string.search_button)
@@ -87,7 +88,7 @@ fun MainScreen(
 
             MenuItem(search, Icons.Filled.Search) { onNavigateToSearch() }
             MenuItem(playlists, Icons.Filled.List) { onNavigateToPlaylists() }
-            MenuItem(favorites, Icons.Filled.Favorite) { }
+            MenuItem(favorites, Icons.Filled.Favorite) { onNavigateToFavorites() }
             MenuItem(settings, Icons.Filled.Settings) { onNavigateToSettings() }
         }
     }

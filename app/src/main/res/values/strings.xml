@@ -31,4 +31,24 @@
     <string name="add_playlist">Добавить плейлист</string>
     <string name="create_new_playlist">Создание нового плейлиста</string>
     <string name="playlist_creation_form">Здесь будет форма создания плейлиста</string>
+    <string name="favorites_screen_title">Избранные треки</string>
+    <string name="favorites_empty_message">Избранные треки</string>
+    <string name="create_playlist_screen_title">Новый плейлист</string>
+    <string name="playlist_name">Название</string>
+    <string name="playlist_description">Описание</string>
+    <string name="create_button">Создать</string>
+    <string name="required_field">*</string>
+    <string name="playlist_name_hint">Введите название плейлиста</string>
+    <string name="playlist_description_hint">Введите описание плейлиста</string>
+    <string name="tracks_count">%d трек%s</string>
+    <string name="playlists_empty_message">Плейлисты отсутствуют</string>
+    <string name="track_details_screen_title">Трек</string>
+    <string name="add_to_favorites">Добавить в избранное</string>
+    <string name="remove_from_favorites">Удалить из избранного</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
+    <string name="select_playlist">Выберите плейлист</string>
+    <string name="duration">Длительность</string>
+    <string name="track_added_to_playlist">Трек добавлен в плейлист</string>
+    <string name="track_removed_from_favorites">Трек удален из избранного</string>
+    <string name="track_added_to_favorites">Трек добавлен в избранное</string>
 </resources>

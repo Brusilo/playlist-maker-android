@@ -28,7 +28,7 @@ fun TrackListItemNew(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onTrackClick() }
-            .padding(vertical = 12.dp),
+            .padding(vertical = 12.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -42,16 +42,17 @@ fun TrackListItemNew(
                 contentDescription = stringResource(R.string.track_image_description, track.trackName),
                 modifier = Modifier.size(40.dp)
             )
-            Spacer(modifier = Modifier.width(11.dp))
+            Spacer(modifier = Modifier.width(16.dp))
             Column(
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.spacedBy(1.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
                     text = track.trackName,
-                    fontSize = 17.sp,
-                    color = Color.Black
+                    fontSize = 16.sp,
+                    color = Color.Black,
+                    maxLines = 1
                 )
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -60,7 +61,8 @@ fun TrackListItemNew(
                     Text(
                         text = track.artistName,
                         fontSize = 14.sp,
-                        color = colorResource(R.color.chevron_grey)
+                        color = colorResource(R.color.chevron_grey),
+                        maxLines = 1
                     )
                     Text(
                         stringResource(R.string.dot_separator),
