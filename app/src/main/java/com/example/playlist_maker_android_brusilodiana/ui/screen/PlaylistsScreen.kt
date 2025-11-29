@@ -1,4 +1,4 @@
-package com.example.playlist_maker_android_brusilodiana.ui
+package com.example.playlist_maker_android_brusilodiana.ui.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

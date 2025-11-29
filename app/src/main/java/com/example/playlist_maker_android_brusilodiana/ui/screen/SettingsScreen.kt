@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.playlist_maker_android_brusilodiana.ui
+package com.example.playlist_maker_android_brusilodiana.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

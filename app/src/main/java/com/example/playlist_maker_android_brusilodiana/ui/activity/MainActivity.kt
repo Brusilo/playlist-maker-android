@@ -1,6 +1,5 @@
 package com.example.playlist_maker_android_brusilodiana.ui.activity
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -27,102 +26,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.playlist_maker_android_brusilodiana.R
-import com.example.playlist_maker_android_brusilodiana.ui.Screen
-import com.example.playlist_maker_android_brusilodiana.ui.SearchScreen
-import com.example.playlist_maker_android_brusilodiana.ui.SettingsScreen
-import com.example.playlist_maker_android_brusilodiana.ui.PlaylistsScreen
-import com.example.playlist_maker_android_brusilodiana.ui.view_model.SearchViewModel
+import com.example.playlist_maker_android_brusilodiana.navigation.PlaylistHost
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppNavigation()
-        }
-    }
-}
-
-@Composable
-fun AppNavigation() {
-    val navController = rememberNavController()
-    val context = androidx.compose.ui.platform.LocalContext.current
-
-    fun navigateTo(screen: Screen) {
-        navController.navigate(screen.route) {
-            launchSingleTop = true
-        }
-    }
-
-    fun navigateUp() {
-        navController.popBackStack()
-    }
-
-    fun shareApp() {
-        val message = context.getString(R.string.share_message)
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, message)
-        }
-        context.startActivity(Intent.createChooser(intent, null))
-    }
-
-    fun writeToSupport() {
-        val email = context.getString(R.string.email_to)
-        val subject = context.getString(R.string.email_subject)
-        val body = context.getString(R.string.email_body)
-
-        val intent = Intent(Intent.ACTION_SENDTO).apply {
-            data = android.net.Uri.parse("mailto:")
-            putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
-            putExtra(Intent.EXTRA_SUBJECT, subject)
-            putExtra(Intent.EXTRA_TEXT, body)
-        }
-        context.startActivity(Intent.createChooser(intent, null))
-    }
-
-    fun openAgreement() {
-        val url = context.getString(R.string.agreement_url)
-        val intent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url))
-        context.startActivity(intent)
-    }
-
-    NavHost(navController = navController, startDestination = Screen.Main.route) {
-        composable(Screen.Main.route) {
-            MainScreen(
-                onNavigateToSearch = { navigateTo(Screen.Search) },
-                onNavigateToSettings = { navigateTo(Screen.Settings) },
-                onNavigateToPlaylists = { navigateTo(Screen.Playlists) }
-            )
-        }
-
-        composable(Screen.Search.route) {
-            val searchViewModel: SearchViewModel = viewModel(
-                factory = SearchViewModel.getViewModelFactory()
-            )
-            SearchScreen(
-                onBackClick = { navigateUp() },
-                viewModel = searchViewModel
-            )
-        }
-
-        composable(Screen.Settings.route) {
-            SettingsScreen(
-                onBackClick = { navigateUp() },
-                onShareClick = { shareApp() },
-                onSupportClick = { writeToSupport() },
-                onAgreementClick = { openAgreement() }
-            )
-        }
-
-        composable(Screen.Playlists.route) {
-            PlaylistsScreen(
-                onBackClick = { navigateUp() }
-            )
+            val navController = rememberNavController()
+            PlaylistHost(navController = navController)
         }
     }
 }

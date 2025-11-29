@@ -1,4 +1,4 @@
-package com.example.playlist_maker_android_brusilodiana
+package com.example.playlist_maker_android_brusilodiana.navigation
 
 import android.content.Intent
 import android.net.Uri
@@ -10,10 +10,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.playlist_maker_android_brusilodiana.ui.activity.MainScreen
 import androidx.core.content.ContextCompat.startActivity
-import com.example.playlist_maker_android_brusilodiana.ui.Screen
-import com.example.playlist_maker_android_brusilodiana.ui.SearchScreen
-import com.example.playlist_maker_android_brusilodiana.ui.SettingsScreen
-import com.example.playlist_maker_android_brusilodiana.ui.PlaylistsScreen
+import com.example.playlist_maker_android_brusilodiana.R
+import com.example.playlist_maker_android_brusilodiana.navigation.Screen
+import com.example.playlist_maker_android_brusilodiana.ui.screen.SearchScreen
+import com.example.playlist_maker_android_brusilodiana.ui.screen.SettingsScreen
+import com.example.playlist_maker_android_brusilodiana.ui.screen.PlaylistsScreen
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.SearchViewModel
 
 @Composable
@@ -31,7 +32,7 @@ fun PlaylistHost(navController: NavHostController) {
     }
 
     fun shareApp() {
-        val message = context.getString(com.example.playlist_maker_android_brusilodiana.R.string.share_message)
+        val message = context.getString(R.string.share_message)
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, message)
@@ -40,9 +41,9 @@ fun PlaylistHost(navController: NavHostController) {
     }
 
     fun writeToSupport() {
-        val email = context.getString(com.example.playlist_maker_android_brusilodiana.R.string.email_to)
-        val subject = context.getString(com.example.playlist_maker_android_brusilodiana.R.string.email_subject)
-        val body = context.getString(com.example.playlist_maker_android_brusilodiana.R.string.email_body)
+        val email = context.getString(R.string.email_to)
+        val subject = context.getString(R.string.email_subject)
+        val body = context.getString(R.string.email_body)
 
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:")
@@ -54,7 +55,7 @@ fun PlaylistHost(navController: NavHostController) {
     }
 
     fun openAgreement() {
-        val url = context.getString(com.example.playlist_maker_android_brusilodiana.R.string.agreement_url)
+        val url = context.getString(R.string.agreement_url)
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         startActivity(context, intent, null)
     }
