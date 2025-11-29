@@ -1,5 +1,6 @@
 package com.example.playlist_maker_android_brusilodiana.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,14 +13,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.PlaylistAdd
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
@@ -29,7 +30,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,13 +37,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.domain.models.Track
@@ -61,12 +65,14 @@ fun TrackDetailsScreen(
     )
 
     var showPlaylistSheet by remember { mutableStateOf(false) }
-    var isFavorite by remember { mutableStateOf(track.favorite) }
-    var currentTrack by remember { mutableStateOf(track) }
 
-    LaunchedEffect(track) {
-        isFavorite = track.favorite
-        currentTrack = track
+    val favoriteTracks by playlistViewModel.favoriteTracks.collectAsState(emptyList())
+
+    val isFavorite = remember(track, favoriteTracks) {
+        favoriteTracks.any { favoriteTrack ->
+            favoriteTrack.trackName == track.trackName &&
+                    favoriteTrack.artistName == track.artistName
+        }
     }
 
     Scaffold(
@@ -114,7 +120,7 @@ fun TrackDetailsScreen(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_music),
-                        contentDescription = currentTrack.trackName,
+                        contentDescription = track.trackName,
                         modifier = Modifier
                             .size(200.dp)
                             .align(Alignment.CenterHorizontally),
@@ -124,16 +130,16 @@ fun TrackDetailsScreen(
                     Spacer(modifier = Modifier.height(40.dp))
 
                     Text(
-                        text = currentTrack.trackName,
+                        text = track.trackName,
                         fontSize = 20.sp,
-                        fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                        fontWeight = FontWeight.Bold,
                         color = colorResource(id = R.color.black)
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = currentTrack.artistName,
+                        text = track.artistName,
                         fontSize = 16.sp,
                         color = colorResource(id = R.color.gray)
                     )
@@ -145,28 +151,33 @@ fun TrackDetailsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        FloatingActionButton(
-                            onClick = { showPlaylistSheet = true },
-                            modifier = Modifier.size(56.dp),
-                            containerColor = colorResource(id = R.color.gray)
+                        Box(
+                            modifier = Modifier
+                                .size(56.dp)
+                                .clip(CircleShape)
+                                .background(colorResource(id = R.color.gray))
+                                .clickable { showPlaylistSheet = true },
+                            contentAlignment = Alignment.Center
                         ) {
                             Icon(
-                                imageVector = Icons.Filled.PlaylistAdd,
+                                imageVector = Icons.Filled.Add,
                                 contentDescription = stringResource(R.string.add_to_playlist),
                                 tint = colorResource(id = R.color.white),
                                 modifier = Modifier.size(24.dp)
                             )
                         }
 
-                        FloatingActionButton(
-                            onClick = {
-                                isFavorite = !isFavorite
-                                kotlinx.coroutines.MainScope().launch {
-                                    playlistViewModel.toggleFavorite(currentTrack, isFavorite)
-                                }
-                            },
-                            modifier = Modifier.size(56.dp),
-                            containerColor = colorResource(id = R.color.gray)
+                        Box(
+                            modifier = Modifier
+                                .size(56.dp)
+                                .clip(CircleShape)
+                                .background(colorResource(id = R.color.gray))
+                                .clickable {
+                                    MainScope().launch(Dispatchers.IO) {
+                                        playlistViewModel.toggleFavorite(track, !isFavorite)
+                                    }
+                                },
+                            contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
@@ -194,10 +205,10 @@ fun TrackDetailsScreen(
                         )
 
                         Text(
-                            text = currentTrack.trackTime,
+                            text = track.trackTime,
                             fontSize = 14.sp,
                             color = colorResource(id = R.color.black),
-                            fontWeight = androidx.compose.ui.text.font.FontWeight.Medium
+                            fontWeight = FontWeight.Medium
                         )
                     }
                 }
@@ -205,11 +216,11 @@ fun TrackDetailsScreen(
         }
 
         if (showPlaylistSheet) {
-            PlaylistSelectionBottomSheet(
+            TrackPlaylistSelectionBottomSheet(
                 onDismissRequest = { showPlaylistSheet = false },
                 onPlaylistSelected = { playlistId ->
-                    kotlinx.coroutines.MainScope().launch {
-                        playlistViewModel.insertTrackToPlaylist(currentTrack, playlistId)
+                    MainScope().launch(Dispatchers.IO) {
+                        playlistViewModel.insertTrackToPlaylist(track, playlistId)
                     }
                     showPlaylistSheet = false
                 }
@@ -220,7 +231,7 @@ fun TrackDetailsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlaylistSelectionBottomSheet(
+fun TrackPlaylistSelectionBottomSheet(
     onDismissRequest: () -> Unit,
     onPlaylistSelected: (Long) -> Unit
 ) {
@@ -245,7 +256,7 @@ fun PlaylistSelectionBottomSheet(
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
-                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                fontWeight = FontWeight.Bold,
                 color = colorResource(id = R.color.black)
             )
 
@@ -284,7 +295,7 @@ fun PlaylistSelectionBottomSheet(
                                 Text(
                                     text = playlist.name,
                                     fontSize = 16.sp,
-                                    fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
+                                    fontWeight = FontWeight.Medium,
                                     color = colorResource(id = R.color.black)
                                 )
                                 Text(

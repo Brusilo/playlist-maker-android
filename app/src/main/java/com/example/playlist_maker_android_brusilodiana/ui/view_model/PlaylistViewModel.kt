@@ -27,14 +27,17 @@ class PlaylistViewModel : ViewModel() {
         tracksRepository.insertTrackToPlaylist(track, playlistId)
     }
 
-    suspend fun toggleFavorite(track: Track, isFavorite: Boolean) {
-        tracksRepository.updateTrackFavoriteStatus(track, isFavorite)
-    }
-    fun getTrackById(trackId: Long): Flow<Track?> {
-        return tracksRepository.getTrackById(trackId)
+    fun toggleFavorite(track: Track, isFavorite: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            tracksRepository.updateTrackFavoriteStatus(track, isFavorite)
+        }
     }
 
     suspend fun isTrackExist(track: Track): Track? {
         return tracksRepository.getTrackByNameAndArtist(track).first()
+    }
+
+    fun getTrackById(trackId: Long): Flow<Track?> {
+        return tracksRepository.getTrackById(trackId)
     }
 }

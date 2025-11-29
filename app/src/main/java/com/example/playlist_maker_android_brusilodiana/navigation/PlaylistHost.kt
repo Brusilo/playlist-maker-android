@@ -10,7 +10,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.playlist_maker_android_brusilodiana.ui.activity.MainScreen
 import androidx.core.content.ContextCompat.startActivity
-import com.example.playlist_maker_android_brusilodiana.navigation.Screen
 import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.ui.screen.SearchScreen
 import com.example.playlist_maker_android_brusilodiana.ui.screen.SettingsScreen
@@ -21,7 +20,6 @@ import com.example.playlist_maker_android_brusilodiana.ui.screen.TrackDetailsScr
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.SearchViewModel
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.PlaylistViewModel
 import com.example.playlist_maker_android_brusilodiana.creator.Creator
-import com.example.playlist_maker_android_brusilodiana.domain.models.Track
 
 @Composable
 fun PlaylistHost(navController: NavHostController) {
@@ -84,11 +82,9 @@ fun PlaylistHost(navController: NavHostController) {
                 onBackClick = { navigateUp() },
                 viewModel = searchViewModel,
                 onTrackClick = { track ->
-                    navController.currentBackStackEntry?.savedStateHandle?.set("trackName", track.trackName)
-                    navController.currentBackStackEntry?.savedStateHandle?.set("artistName", track.artistName)
-                    navController.currentBackStackEntry?.savedStateHandle?.set("trackTime", track.trackTime)
-                    navController.currentBackStackEntry?.savedStateHandle?.set("favorite", track.favorite)
-                    navigateTo(Screen.TrackDetails)
+                    navController.navigate("${Screen.TrackDetails.route}/${track.trackName}/${track.artistName}/${track.trackTime}/${track.favorite}") {
+                        launchSingleTop = true
+                    }
                 }
             )
         }
@@ -116,11 +112,9 @@ fun PlaylistHost(navController: NavHostController) {
             FavoritesScreen(
                 onBackClick = { navigateUp() },
                 onTrackClick = { track ->
-                    navController.currentBackStackEntry?.savedStateHandle?.set("trackName", track.trackName)
-                    navController.currentBackStackEntry?.savedStateHandle?.set("artistName", track.artistName)
-                    navController.currentBackStackEntry?.savedStateHandle?.set("trackTime", track.trackTime)
-                    navController.currentBackStackEntry?.savedStateHandle?.set("favorite", track.favorite)
-                    navigateTo(Screen.TrackDetails)
+                    navController.navigate("${Screen.TrackDetails.route}/${track.trackName}/${track.artistName}/${track.trackTime}/${track.favorite}") {
+                        launchSingleTop = true
+                    }
                 }
             )
         }
@@ -139,21 +133,21 @@ fun PlaylistHost(navController: NavHostController) {
             )
         }
 
-        composable(Screen.TrackDetails.route) {
-            val trackName = navController.previousBackStackEntry?.savedStateHandle?.get<String>("trackName") ?: ""
-            val artistName = navController.previousBackStackEntry?.savedStateHandle?.get<String>("artistName") ?: ""
-            val trackTime = navController.previousBackStackEntry?.savedStateHandle?.get<String>("trackTime") ?: ""
-            val favorite = navController.previousBackStackEntry?.savedStateHandle?.get<Boolean>("favorite") ?: false
-
-            val track = Track(
-                trackName = trackName,
-                artistName = artistName,
-                trackTime = trackTime,
-                favorite = favorite
-            )
+        composable(
+            "${Screen.TrackDetails.route}/{trackName}/{artistName}/{trackTime}/{favorite}"
+        ) { backStackEntry ->
+            val trackName = backStackEntry.arguments?.getString("trackName") ?: ""
+            val artistName = backStackEntry.arguments?.getString("artistName") ?: ""
+            val trackTime = backStackEntry.arguments?.getString("trackTime") ?: ""
+            val favorite = backStackEntry.arguments?.getString("favorite")?.toBoolean() ?: false
 
             TrackDetailsScreen(
-                track = track,
+                track = com.example.playlist_maker_android_brusilodiana.domain.models.Track(
+                    trackName = trackName,
+                    artistName = artistName,
+                    trackTime = trackTime,
+                    favorite = favorite
+                ),
                 onBackClick = { navigateUp() }
             )
         }
