@@ -33,9 +33,10 @@ class DatabaseMock private constructor(context: Context) {
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences("app_database", Context.MODE_PRIVATE)
     private val gson = Gson()
     private val tracksKey = "tracks_data"
-    private val idCounterKey = "id_counter"
     private val playlistsKey = "playlists_data"
     private val historyKey = "history_data"
+    private val playlistTracksKey = "playlist_tracks_data"
+    private val idCounterKey = "id_counter"
 
     private val historyList = mutableListOf<String>().apply {
         addAll(loadHistoryFromStorage())
@@ -46,7 +47,7 @@ class DatabaseMock private constructor(context: Context) {
     }
 
     private val _tracks = MutableStateFlow(loadTracksFromStorage())
-    val tracks: List<Track> get() = _tracks.value
+    private val _playlistTracks = MutableStateFlow(loadPlaylistTracksFromStorage())
 
     private val tracksMutex = Mutex()
     private val scope = CoroutineScope(Dispatchers.IO)
@@ -90,6 +91,16 @@ class DatabaseMock private constructor(context: Context) {
         }
     }
 
+    private fun loadPlaylistTracksFromStorage(): MutableList<PlaylistTrack> {
+        val playlistTracksJson = sharedPreferences.getString(playlistTracksKey, null)
+        return if (playlistTracksJson != null) {
+            val type = object : TypeToken<MutableList<PlaylistTrack>>() {}.type
+            gson.fromJson(playlistTracksJson, type) ?: mutableListOf()
+        } else {
+            mutableListOf()
+        }
+    }
+
     private fun saveTracksToStorage(tracks: List<Track>) {
         val tracksJson = gson.toJson(tracks)
         sharedPreferences.edit().putString(tracksKey, tracksJson).apply()
@@ -103,6 +114,11 @@ class DatabaseMock private constructor(context: Context) {
     private fun saveHistoryToStorage() {
         val historyJson = gson.toJson(historyList)
         sharedPreferences.edit().putString(historyKey, historyJson).apply()
+    }
+
+    private fun savePlaylistTracksToStorage(playlistTracks: List<PlaylistTrack>) {
+        val playlistTracksJson = gson.toJson(playlistTracks)
+        sharedPreferences.edit().putString(playlistTracksKey, playlistTracksJson).apply()
     }
 
     fun getHistory(): List<String> {
@@ -125,8 +141,11 @@ class DatabaseMock private constructor(context: Context) {
         delay(500)
         val filteredPlaylists = mutableListOf<Playlist>()
         playlists.forEach { playlist ->
+            val playlistTrackIds = _playlistTracks.value
+                .filter { it.playlistId == playlist.id }
+                .map { it.trackId }
             val playlistTracks = _tracks.value.filter { track ->
-                track.playlistId == playlist.id
+                playlistTrackIds.contains(track.id)
             }
             filteredPlaylists.add(playlist.copy(tracks = playlistTracks))
         }
@@ -137,7 +156,12 @@ class DatabaseMock private constructor(context: Context) {
     fun getPlaylist(id: Long): Flow<Playlist?> = flow {
         val playlist = playlists.find { it.id == id }
         if (playlist != null) {
-            val playlistTracks = _tracks.value.filter { it.playlistId == id }
+            val playlistTrackIds = _playlistTracks.value
+                .filter { it.playlistId == playlist.id }
+                .map { it.trackId }
+            val playlistTracks = _tracks.value.filter { track ->
+                playlistTrackIds.contains(track.id)
+            }
             emit(playlist.copy(tracks = playlistTracks))
         } else {
             emit(null)
@@ -165,36 +189,46 @@ class DatabaseMock private constructor(context: Context) {
     suspend fun addTrackToPlaylist(track: Track, playlistId: Long) {
         tracksMutex.withLock {
             val currentTracks = _tracks.value.toMutableList()
+            val currentPlaylistTracks = _playlistTracks.value.toMutableList()
 
-            val trackWithPlaylist = track.copy(
-                id = if (track.id == 0L) generateId() else track.id,
-                playlistId = playlistId
-            )
-
-            val existingIndex = currentTracks.indexOfFirst { existingTrack ->
+            val existingTrackIndex = currentTracks.indexOfFirst { existingTrack ->
                 existingTrack.trackName.equals(track.trackName, ignoreCase = true) &&
-                        existingTrack.artistName.equals(track.artistName, ignoreCase = true) &&
-                        existingTrack.playlistId == playlistId
+                        existingTrack.artistName.equals(track.artistName, ignoreCase = true)
             }
 
-            if (existingIndex != -1) {
-                currentTracks[existingIndex] = trackWithPlaylist
+            val trackId = if (existingTrackIndex != -1) {
+                currentTracks[existingTrackIndex].id
             } else {
-                currentTracks.add(trackWithPlaylist)
+                val newId = generateId()
+                val newTrack = track.copy(id = newId)
+                currentTracks.add(newTrack)
+                newId
+            }
+
+            val existingPlaylistTrackIndex = currentPlaylistTracks.indexOfFirst { playlistTrack ->
+                playlistTrack.trackId == trackId && playlistTrack.playlistId == playlistId
+            }
+
+            if (existingPlaylistTrackIndex == -1) {
+                currentPlaylistTracks.add(PlaylistTrack(generateId(), playlistId, trackId))
             }
 
             _tracks.value = currentTracks
+            _playlistTracks.value = currentPlaylistTracks
             saveTracksToStorage(currentTracks)
+            savePlaylistTracksToStorage(currentPlaylistTracks)
         }
     }
 
-    fun deleteTrackFromPlaylist(trackId: Long) {
+    fun deleteTrackFromPlaylist(trackId: Long, playlistId: Long) {
         scope.launch(Dispatchers.IO) {
             tracksMutex.withLock {
-                val currentTracks = _tracks.value.toMutableList()
-                currentTracks.removeIf { it.id == trackId }
-                _tracks.value = currentTracks
-                saveTracksToStorage(currentTracks)
+                val currentPlaylistTracks = _playlistTracks.value.toMutableList()
+                currentPlaylistTracks.removeIf {
+                    it.trackId == trackId && it.playlistId == playlistId
+                }
+                _playlistTracks.value = currentPlaylistTracks
+                savePlaylistTracksToStorage(currentPlaylistTracks)
             }
         }
     }
@@ -222,7 +256,10 @@ class DatabaseMock private constructor(context: Context) {
 
                 if (existingIndex != -1) {
                     val existingTrack = currentTracks[existingIndex]
-                    val updatedTrack = track.copy(id = existingTrack.id)
+                    val updatedTrack = existingTrack.copy(
+                        favorite = track.favorite,
+                        artworkUrl = track.artworkUrl
+                    )
                     currentTracks[existingIndex] = updatedTrack
                 } else {
                     val newId = if (track.id == 0L) generateId() else track.id
@@ -253,10 +290,10 @@ class DatabaseMock private constructor(context: Context) {
     fun deleteTracksByPlaylistId(playlistId: Long) {
         scope.launch(Dispatchers.IO) {
             tracksMutex.withLock {
-                val currentTracks = _tracks.value.toMutableList()
-                currentTracks.removeIf { it.playlistId == playlistId }
-                _tracks.value = currentTracks
-                saveTracksToStorage(currentTracks)
+                val currentPlaylistTracks = _playlistTracks.value.toMutableList()
+                currentPlaylistTracks.removeIf { it.playlistId == playlistId }
+                _playlistTracks.value = currentPlaylistTracks
+                savePlaylistTracksToStorage(currentPlaylistTracks)
             }
         }
     }
@@ -293,27 +330,21 @@ class DatabaseMock private constructor(context: Context) {
             }.thenBy { it.trackName })
     }
 
-    fun deleteTrackFromPlaylist(track: Track) {
-        scope.launch(Dispatchers.IO) {
-            tracksMutex.withLock {
-                val currentTracks = _tracks.value.toMutableList()
-                currentTracks.removeIf {
-                    it.trackName == track.trackName &&
-                            it.artistName == track.artistName &&
-                            it.playlistId == track.playlistId
-                }
-                _tracks.value = currentTracks
-                saveTracksToStorage(currentTracks)
-            }
-        }
-    }
-
     fun getTracksByPlaylistId(playlistId: Long): Flow<List<Track>> = flow {
         _tracks.collect { trackList ->
             tracksMutex.withLock {
-                val playlistTracks = trackList.filter { it.playlistId == playlistId }
+                val playlistTrackIds = _playlistTracks.value
+                    .filter { it.playlistId == playlistId }
+                    .map { it.trackId }
+                val playlistTracks = trackList.filter { playlistTrackIds.contains(it.id) }
                 emit(playlistTracks)
             }
         }
     }
+
+    data class PlaylistTrack(
+        val id: Long,
+        val playlistId: Long,
+        val trackId: Long
+    )
 }

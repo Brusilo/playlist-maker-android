@@ -77,11 +77,14 @@ class TracksRepositoryImpl(
     }
 
     override suspend fun insertTrackToPlaylist(track: Track, playlistId: Long) {
-        database.insertTrack(track.copy(playlistId = playlistId))
+        database.addTrackToPlaylist(track, playlistId)
     }
 
-    override suspend fun deleteTrackFromPlaylist(track: Track) {
-        database.deleteTrackFromPlaylist(track)
+    override suspend fun deleteTrackFromPlaylist(track: Track, playlistId: Long) {
+        val existingTrack = database.getTrackByNameAndArtist(track).first()
+        existingTrack?.let {
+            database.deleteTrackFromPlaylist(it.id, playlistId)
+        }
     }
 
     override suspend fun updateTrackFavoriteStatus(track: Track, isFavorite: Boolean) {
@@ -111,11 +114,10 @@ class TracksRepositoryImpl(
     }
 
     override suspend fun saveTrack(track: Track, playlistId: Long?) {
-        val trackToSave = if (playlistId != null) {
-            track.copy(playlistId = playlistId)
+        if (playlistId != null) {
+            database.addTrackToPlaylist(track, playlistId)
         } else {
-            track
+            database.insertTrack(track)
         }
-        database.insertTrack(trackToSave)
     }
 }
