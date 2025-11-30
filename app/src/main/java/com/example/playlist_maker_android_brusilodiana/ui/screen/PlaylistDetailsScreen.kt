@@ -19,17 +19,25 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,19 +47,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.domain.models.Playlist
 import com.example.playlist_maker_android_brusilodiana.domain.models.Track
 import com.example.playlist_maker_android_brusilodiana.ui.component.TrackListItemNew
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.PlaylistViewModel
 import com.example.playlist_maker_android_brusilodiana.creator.Creator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlaylistDetailsScreen(
     playlistId: Long,
     onBackClick: () -> Unit,
-    onTrackClick: (Track) -> Unit = {}
+    onTrackClick: (Track) -> Unit = {},
+    navController: NavController? = null
 ) {
     val context = LocalContext.current
     val playlistViewModel: PlaylistViewModel = viewModel(
@@ -59,6 +71,9 @@ fun PlaylistDetailsScreen(
     )
 
     val playlist by playlistViewModel.getPlaylistById(playlistId).collectAsState(initial = null)
+    var showOptionsSheet by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
 
     LaunchedEffect(playlistId) {
         playlistViewModel.getPlaylistById(playlistId)
@@ -95,6 +110,7 @@ fun PlaylistDetailsScreen(
             PlaylistDetailsContent(
                 playlist = playlist!!,
                 onTrackClick = onTrackClick,
+                onOptionsClick = { showOptionsSheet = true },
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
@@ -113,6 +129,111 @@ fun PlaylistDetailsScreen(
                 )
             }
         }
+
+        if (showOptionsSheet && playlist != null) {
+            ModalBottomSheet(
+                onDismissRequest = { showOptionsSheet = false },
+                sheetState = sheetState,
+                dragHandle = { BottomSheetDefaults.DragHandle() }
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = playlist!!.name,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = colorResource(id = R.color.black)
+                    )
+                    Text(
+                        text = getTracksCountText(playlist!!.tracks.size),
+                        fontSize = 14.sp,
+                        color = colorResource(id = R.color.gray),
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    TextButton(
+                        onClick = {
+                            playlistViewModel.sharePlaylist(playlist!!)
+                            showOptionsSheet = false
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = stringResource(R.string.share_playlist),
+                            color = colorResource(id = R.color.black),
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Start
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    TextButton(
+                        onClick = {
+                            showOptionsSheet = false
+                            showDeleteDialog = true
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = stringResource(R.string.delete_playlist),
+                            color = colorResource(id = R.color.black),
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Start
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
+        }
+
+        if (showDeleteDialog) {
+            AlertDialog(
+                onDismissRequest = { showDeleteDialog = false },
+                title = {
+                    Text(
+                        text = stringResource(R.string.confirm_delete_playlist),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                },
+                text = {},
+                confirmButton = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
+                    ) {
+                        TextButton(
+                            onClick = { showDeleteDialog = false }
+                        ) {
+                            Text(
+                                text = stringResource(R.string.no_button),
+                                color = colorResource(id = R.color.black)
+                            )
+                        }
+                        TextButton(
+                            onClick = {
+                                showDeleteDialog = false
+                                kotlinx.coroutines.MainScope().launch(Dispatchers.IO) {
+                                    try {
+                                        playlistViewModel.deletePlaylist(playlistId)
+                                        navController?.popBackStack()
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }
+                                }
+                            }
+                        ) {
+                            Text(
+                                text = stringResource(R.string.yes_button),
+                                color = colorResource(id = R.color.black)
+                            )
+                        }
+                    }
+                },
+                dismissButton = {}
+            )
+        }
     }
 }
 
@@ -120,13 +241,14 @@ fun PlaylistDetailsScreen(
 fun PlaylistDetailsContent(
     playlist: Playlist,
     onTrackClick: (Track) -> Unit,
+    onOptionsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier
     ) {
         item {
-            PlaylistHeader(playlist = playlist)
+            PlaylistHeader(playlist = playlist, onOptionsClick = onOptionsClick)
         }
 
         items(playlist.tracks) { track ->
@@ -143,7 +265,7 @@ fun PlaylistDetailsContent(
 }
 
 @Composable
-fun PlaylistHeader(playlist: Playlist) {
+fun PlaylistHeader(playlist: Playlist, onOptionsClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -225,7 +347,7 @@ fun PlaylistHeader(playlist: Playlist) {
         Spacer(modifier = Modifier.height(16.dp))
 
         IconButton(
-            onClick = { },
+            onClick = onOptionsClick,
             modifier = Modifier.size(24.dp)
         ) {
             Icon(

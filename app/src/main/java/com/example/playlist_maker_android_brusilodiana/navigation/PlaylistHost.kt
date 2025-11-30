@@ -188,7 +188,8 @@ fun PlaylistHost(navController: NavHostController) {
                     navController.navigate("${Screen.TrackDetails.route}/${Uri.encode(track.trackName)}/${Uri.encode(track.artistName)}/${track.trackTime}") {
                         launchSingleTop = true
                     }
-                }
+                },
+                navController = navController
             )
         }
     }

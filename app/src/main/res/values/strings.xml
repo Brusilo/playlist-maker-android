@@ -64,4 +64,10 @@
     <string name="tracks_suffix_single"></string>
     <string name="tracks_suffix_few">а</string>
     <string name="tracks_suffix_many">ов</string>
+    <string name="share_playlist">Поделиться</string>
+    <string name="delete_playlist">Удалить плейлист</string>
+    <string name="confirm_delete_playlist">Вы уверены, что хотите удалить плейлист?</string>
+    <string name="yes_button">Да</string>
+    <string name="no_button">Нет</string>
+    <string name="share_playlist_message">Посмотрите мой плейлист \"%s\" в приложении Playlist Maker!</string>
 </resources>

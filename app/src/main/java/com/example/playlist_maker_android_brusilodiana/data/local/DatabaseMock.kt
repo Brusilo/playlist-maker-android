@@ -158,6 +158,7 @@ class DatabaseMock private constructor(context: Context) {
 
     fun deletePlaylistById(playlistId: Long) {
         playlists.removeIf { it.id == playlistId }
+        deleteTracksByPlaylistId(playlistId)
         savePlaylistsToStorage()
     }
 
