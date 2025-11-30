@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -235,7 +236,11 @@ fun CreatePlaylistScreen(
                     .fillMaxWidth()
                     .height(56.dp),
                 enabled = playlistName.isNotEmpty(),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorResource(id = R.color.blue_background),
+                    disabledContainerColor = colorResource(id = R.color.gray)
+                )
             ) {
                 Text(
                     text = stringResource(R.string.create_button),

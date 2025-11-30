@@ -73,6 +73,7 @@ fun PlaylistDetailsScreen(
     val playlist by playlistViewModel.getPlaylistById(playlistId).collectAsState(initial = null)
     var showOptionsSheet by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showError by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
 
     LaunchedEffect(playlistId) {
@@ -194,7 +195,10 @@ fun PlaylistDetailsScreen(
                 title = {
                     Text(
                         text = stringResource(R.string.confirm_delete_playlist),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 },
                 text = {},
@@ -214,12 +218,18 @@ fun PlaylistDetailsScreen(
                         TextButton(
                             onClick = {
                                 showDeleteDialog = false
-                                kotlinx.coroutines.MainScope().launch(Dispatchers.IO) {
+                                // Безопасное удаление с обработкой ошибок
+                                kotlinx.coroutines.MainScope().launch {
                                     try {
-                                        playlistViewModel.deletePlaylist(playlistId)
-                                        navController?.popBackStack()
+                                        // Удаляем в IO dispatcher
+                                        kotlinx.coroutines.withContext(Dispatchers.IO) {
+                                            playlistViewModel.deletePlaylist(playlistId)
+                                        }
+                                        // Навигация в главном потоке
+                                        onBackClick()
                                     } catch (e: Exception) {
                                         e.printStackTrace()
+                                        showError = true
                                     }
                                 }
                             }
@@ -232,6 +242,31 @@ fun PlaylistDetailsScreen(
                     }
                 },
                 dismissButton = {}
+            )
+        }
+
+        if (showError) {
+            AlertDialog(
+                onDismissRequest = { showError = false },
+                title = {
+                    Text(
+                        text = "Ошибка",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                },
+                text = {
+                    Text("Не удалось удалить плейлист")
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = { showError = false }
+                    ) {
+                        Text("OK")
+                    }
+                }
             )
         }
     }
