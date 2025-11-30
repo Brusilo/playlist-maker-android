@@ -135,7 +135,13 @@ class DatabaseMock private constructor(context: Context) {
     }
 
     fun getPlaylist(id: Long): Flow<Playlist?> = flow {
-        emit(playlists.find { it.id == id })
+        val playlist = playlists.find { it.id == id }
+        if (playlist != null) {
+            val playlistTracks = _tracks.value.filter { it.playlistId == id }
+            emit(playlist.copy(tracks = playlistTracks))
+        } else {
+            emit(null)
+        }
     }
 
     fun addNewPlaylist(name: String, description: String) {
@@ -153,6 +159,32 @@ class DatabaseMock private constructor(context: Context) {
     fun deletePlaylistById(playlistId: Long) {
         playlists.removeIf { it.id == playlistId }
         savePlaylistsToStorage()
+    }
+
+    suspend fun addTrackToPlaylist(track: Track, playlistId: Long) {
+        tracksMutex.withLock {
+            val currentTracks = _tracks.value.toMutableList()
+
+            val trackWithPlaylist = track.copy(
+                id = if (track.id == 0L) generateId() else track.id,
+                playlistId = playlistId
+            )
+
+            val existingIndex = currentTracks.indexOfFirst { existingTrack ->
+                existingTrack.trackName.equals(track.trackName, ignoreCase = true) &&
+                        existingTrack.artistName.equals(track.artistName, ignoreCase = true) &&
+                        existingTrack.playlistId == playlistId
+            }
+
+            if (existingIndex != -1) {
+                currentTracks[existingIndex] = trackWithPlaylist
+            } else {
+                currentTracks.add(trackWithPlaylist)
+            }
+
+            _tracks.value = currentTracks
+            saveTracksToStorage(currentTracks)
+        }
     }
 
     fun deleteTrackFromPlaylist(trackId: Long) {
@@ -236,7 +268,28 @@ class DatabaseMock private constructor(context: Context) {
     }
 
     fun searchTracks(expression: String): List<Track> {
-        return _tracks.value.filter { it.trackName.contains(expression, true) }
+        val searchQuery = expression.trim().lowercase()
+        if (searchQuery.isEmpty()) return emptyList()
+
+        return _tracks.value
+            .filter { track ->
+                track.trackName.contains(searchQuery, ignoreCase = true) ||
+                        track.artistName.contains(searchQuery, ignoreCase = true)
+            }
+            .sortedWith(compareBy<Track> { track ->
+                val trackNameLower = track.trackName.lowercase()
+                val artistNameLower = track.artistName.lowercase()
+
+                when {
+                    trackNameLower == searchQuery -> 1
+                    artistNameLower == searchQuery -> 2
+                    trackNameLower.startsWith(searchQuery) -> 3
+                    artistNameLower.startsWith(searchQuery) -> 4
+                    trackNameLower.split(" ").any { it.startsWith(searchQuery) } -> 5
+                    artistNameLower.split(" ").any { it.startsWith(searchQuery) } -> 6
+                    else -> 7
+                }
+            }.thenBy { it.trackName })
     }
 
     fun deleteTrackFromPlaylist(track: Track) {

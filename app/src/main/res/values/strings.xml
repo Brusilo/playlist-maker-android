@@ -51,4 +51,17 @@
     <string name="track_added_to_playlist">Трек добавлен в плейлист</string>
     <string name="track_removed_from_favorites">Трек удален из избранного</string>
     <string name="track_added_to_favorites">Трек добавлен в избранное</string>
+    <string name="playlist_details_screen_title">Плейлист</string>
+    <string name="options_button">Опции</string>
+    <string name="loading_text">Загрузка...</string>
+    <string name="empty_playlist_title">Плейлист пуст</string>
+    <string name="empty_playlist_subtitle">Добавьте треки в плейлист</string>
+    <string name="tracks_header">Треки</string>
+    <string name="minutes_count">%d мин</string>
+    <string name="tracks_count_single">%d трек</string>
+    <string name="tracks_count_few">%d трека</string>
+    <string name="tracks_count_many">%d треков</string>
+    <string name="tracks_suffix_single"></string>
+    <string name="tracks_suffix_few">а</string>
+    <string name="tracks_suffix_many">ов</string>
 </resources>

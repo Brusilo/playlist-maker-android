@@ -1,4 +1,4 @@
-package com.example.playlist_maker_android_brusilodiana.ui
+package com.example.playlist_maker_android_brusilodiana.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*

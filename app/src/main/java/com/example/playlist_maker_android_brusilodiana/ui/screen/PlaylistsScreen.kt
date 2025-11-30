@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.playlist_maker_android_brusilodiana.R
@@ -53,7 +54,8 @@ fun PlaylistsScreen(
                     Text(
                         text = stringResource(R.string.playlists_screen_title),
                         color = colorResource(id = R.color.black),
-                        fontSize = 20.sp
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Medium
                     )
                 },
                 navigationIcon = {
@@ -78,7 +80,8 @@ fun PlaylistsScreen(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.add_playlist)
+                    contentDescription = stringResource(R.string.add_playlist),
+                    tint = colorResource(id = R.color.white)
                 )
             }
         }

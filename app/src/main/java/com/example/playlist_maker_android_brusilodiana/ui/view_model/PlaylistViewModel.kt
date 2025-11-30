@@ -34,6 +34,10 @@ class PlaylistViewModel(private val context: Context) : ViewModel() {
         }
     }
 
+    fun getPlaylistById(playlistId: Long): Flow<Playlist?> {
+        return playlistsRepository.getPlaylist(playlistId)
+    }
+
     suspend fun isTrackExist(track: Track): Track? {
         return tracksRepository.getTrackByNameAndArtist(track).first()
     }

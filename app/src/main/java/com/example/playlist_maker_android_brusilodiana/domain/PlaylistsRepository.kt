@@ -2,6 +2,7 @@ package com.example.playlist_maker_android_brusilodiana.domain
 
 import com.example.playlist_maker_android_brusilodiana.domain.models.Playlist
 import kotlinx.coroutines.flow.Flow
+import com.example.playlist_maker_android_brusilodiana.domain.models.Track
 
 interface PlaylistsRepository {
     fun getPlaylist(playlistId: Long): Flow<Playlist?>
@@ -9,6 +10,8 @@ interface PlaylistsRepository {
     fun getAllPlaylists(): Flow<List<Playlist>>
 
     suspend fun addNewPlaylist(name: String, description: String)
+
+    suspend fun addTrackToPlaylist(track: Track, playlistId: Long)
 
     suspend fun deletePlaylistById(id: Long)
 }

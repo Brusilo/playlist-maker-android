@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.playlist_maker_android_brusilodiana.data.local.DatabaseMock
 import com.example.playlist_maker_android_brusilodiana.domain.PlaylistsRepository
 import com.example.playlist_maker_android_brusilodiana.domain.models.Playlist
+import com.example.playlist_maker_android_brusilodiana.domain.models.Track
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -28,5 +29,9 @@ class PlaylistsRepositoryImpl(
 
     override suspend fun deletePlaylistById(id: Long) {
         database.deletePlaylistById(id)
+    }
+
+    override suspend fun addTrackToPlaylist(track: Track, playlistId: Long) {
+        database.addTrackToPlaylist(track, playlistId)
     }
 }

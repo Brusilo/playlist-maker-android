@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.domain.states.SearchState
-import com.example.playlist_maker_android_brusilodiana.ui.TrackListItemNew
+import com.example.playlist_maker_android_brusilodiana.ui.component.TrackListItemNew
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.SearchViewModel
 
 @Composable

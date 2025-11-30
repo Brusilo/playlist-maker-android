@@ -6,8 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.playlist_maker_android_brusilodiana.ui.activity.MainScreen
 import androidx.core.content.ContextCompat.startActivity
 import com.example.playlist_maker_android_brusilodiana.R
@@ -17,9 +19,11 @@ import com.example.playlist_maker_android_brusilodiana.ui.screen.PlaylistsScreen
 import com.example.playlist_maker_android_brusilodiana.ui.screen.FavoritesScreen
 import com.example.playlist_maker_android_brusilodiana.ui.screen.CreatePlaylistScreen
 import com.example.playlist_maker_android_brusilodiana.ui.screen.TrackDetailsScreen
+import com.example.playlist_maker_android_brusilodiana.ui.screen.PlaylistDetailsScreen
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.SearchViewModel
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.PlaylistViewModel
 import com.example.playlist_maker_android_brusilodiana.creator.Creator
+import com.example.playlist_maker_android_brusilodiana.domain.models.Track
 
 @Composable
 fun PlaylistHost(navController: NavHostController) {
@@ -76,13 +80,13 @@ fun PlaylistHost(navController: NavHostController) {
 
         composable(Screen.Search.route) {
             val searchViewModel: SearchViewModel = viewModel(
-                factory = SearchViewModel.getViewModelFactory(context) // Исправлено здесь
+                factory = SearchViewModel.getViewModelFactory(context)
             )
             SearchScreen(
                 onBackClick = { navigateUp() },
                 viewModel = searchViewModel,
-                onTrackClick = { track ->
-                    navController.navigate("${Screen.TrackDetails.route}/${track.trackName}/${track.artistName}/${track.trackTime}/${track.favorite}") {
+                onTrackClick = { track: Track ->
+                    navController.navigate("${Screen.TrackDetails.route}/${Uri.encode(track.trackName)}/${Uri.encode(track.artistName)}/${track.trackTime}") {
                         launchSingleTop = true
                     }
                 }
@@ -106,7 +110,9 @@ fun PlaylistHost(navController: NavHostController) {
                 onBackClick = { navigateUp() },
                 onCreateNewPlaylist = { navigateTo(Screen.CreatePlaylist) },
                 onPlaylistClick = { playlistId ->
-                    println("Playlist clicked: $playlistId")
+                    navController.navigate("${Screen.PlaylistDetails.route}/$playlistId") {
+                        launchSingleTop = true
+                    }
                 }
             )
         }
@@ -117,8 +123,8 @@ fun PlaylistHost(navController: NavHostController) {
             )
             FavoritesScreen(
                 onBackClick = { navigateUp() },
-                onTrackClick = { track ->
-                    navController.navigate("${Screen.TrackDetails.route}/${track.trackName}/${track.artistName}/${track.trackTime}/${track.favorite}") {
+                onTrackClick = { track: Track ->
+                    navController.navigate("${Screen.TrackDetails.route}/${Uri.encode(track.trackName)}/${Uri.encode(track.artistName)}/${track.trackTime}") {
                         launchSingleTop = true
                     }
                 }
@@ -140,25 +146,49 @@ fun PlaylistHost(navController: NavHostController) {
         }
 
         composable(
-            "${Screen.TrackDetails.route}/{trackName}/{artistName}/{trackTime}/{favorite}"
+            "${Screen.TrackDetails.route}/{trackName}/{artistName}/{trackTime}",
+            arguments = listOf(
+                navArgument("trackName") { type = NavType.StringType },
+                navArgument("artistName") { type = NavType.StringType },
+                navArgument("trackTime") { type = NavType.StringType }
+            )
         ) { backStackEntry ->
-            val trackName = backStackEntry.arguments?.getString("trackName") ?: ""
-            val artistName = backStackEntry.arguments?.getString("artistName") ?: ""
+            val trackName = Uri.decode(backStackEntry.arguments?.getString("trackName") ?: "")
+            val artistName = Uri.decode(backStackEntry.arguments?.getString("artistName") ?: "")
             val trackTime = backStackEntry.arguments?.getString("trackTime") ?: ""
-            val favorite = backStackEntry.arguments?.getString("favorite")?.toBoolean() ?: false
 
             val playlistViewModel: PlaylistViewModel = viewModel(
                 factory = Creator.getPlaylistViewModelFactory(context)
             )
 
             TrackDetailsScreen(
-                track = com.example.playlist_maker_android_brusilodiana.domain.models.Track(
+                track = Track(
                     trackName = trackName,
                     artistName = artistName,
                     trackTime = trackTime,
-                    favorite = favorite
+                    favorite = false,
+                    artworkUrl = ""
                 ),
                 onBackClick = { navigateUp() }
+            )
+        }
+
+        composable(
+            "${Screen.PlaylistDetails.route}/{playlistId}",
+            arguments = listOf(
+                navArgument("playlistId") { type = NavType.LongType }
+            )
+        ) { backStackEntry ->
+            val playlistId = backStackEntry.arguments?.getLong("playlistId") ?: 0L
+
+            PlaylistDetailsScreen(
+                playlistId = playlistId,
+                onBackClick = { navigateUp() },
+                onTrackClick = { track: Track ->
+                    navController.navigate("${Screen.TrackDetails.route}/${Uri.encode(track.trackName)}/${Uri.encode(track.artistName)}/${track.trackTime}") {
+                        launchSingleTop = true
+                    }
+                }
             )
         }
     }
