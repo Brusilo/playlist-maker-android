@@ -60,6 +60,14 @@
 - Обработка различных сценариев поиска
 - Устойчивость к отсутствию данных от API
 
+### Sprint-10:
+- Реализовано хранение плейлистов в Room вместо моков
+- Переведено "Избранное" на работу с Room
+- Создан SearchHistoryPreferences для хранения истории в DataStore
+- Реализовано ограничение истории до 10 запросов без дубликатов
+- Удалены DatabaseMock и моки истории поиска
+- Сохранение всех данных между запусками приложения
+
 ## Чек-листы
 - [Sprint-3](checklists/sprint-3.md)
 - [Sprint-4](checklists/sprint-4.md)
@@ -68,3 +76,4 @@
 - [Sprint-7](checklists/sprint-7.md)
 - [Sprint-8](checklists/sprint-8.md)
 - [Sprint-9](checklists/sprint-9.md)
+- [Sprint-10](checklists/sprint-10.md)
