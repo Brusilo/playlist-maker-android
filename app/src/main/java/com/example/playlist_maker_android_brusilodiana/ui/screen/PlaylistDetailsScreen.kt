@@ -258,7 +258,7 @@ fun PlaylistDetailsScreen(
                 onDismissRequest = { showError = false },
                 title = {
                     Text(
-                        text = "Ошибка",
+                        text = stringResource(R.string.error_title),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Medium,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center,
@@ -266,13 +266,13 @@ fun PlaylistDetailsScreen(
                     )
                 },
                 text = {
-                    Text("Не удалось удалить плейлист")
+                    Text(stringResource(R.string.delete_playlist_error))
                 },
                 confirmButton = {
                     TextButton(
                         onClick = { showError = false }
                     ) {
-                        Text("OK")
+                        Text(stringResource(R.string.ok_button))
                     }
                 }
             )

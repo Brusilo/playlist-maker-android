@@ -64,7 +64,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrackDetailsScreen(
-    track: Track, // ИЗМЕНЕНО: принимаем объект Track, а не trackId
+    track: Track,
     onBackClick: () -> Unit
 ) {
     val context = LocalContext.current

@@ -6,20 +6,27 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.creator.Creator
+import com.example.playlist_maker_android_brusilodiana.domain.SearchHistoryRepository
 import com.example.playlist_maker_android_brusilodiana.domain.TracksRepository
 import com.example.playlist_maker_android_brusilodiana.domain.states.SearchState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val tracksRepository: TracksRepository,
+    private val searchHistoryRepository: SearchHistoryRepository,
     private val context: Context
 ) : ViewModel() {
     private val _searchScreenState = MutableStateFlow<SearchState>(SearchState.Initial)
     val searchScreenState = _searchScreenState.asStateFlow()
+
+    val searchHistory = searchHistoryRepository.getHistory().map { history ->
+        history.take(10)
+    }
 
     private var lastSearchQuery: String = ""
     private var isSearching = false
@@ -33,6 +40,8 @@ class SearchViewModel(
 
         lastSearchQuery = whatSearch
         isSearching = true
+
+        searchHistoryRepository.addToHistory(whatSearch)
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -86,6 +95,12 @@ class SearchViewModel(
         _searchScreenState.value = SearchState.Initial
     }
 
+    fun clearHistory() {
+        viewModelScope.launch(Dispatchers.IO) {
+            searchHistoryRepository.clearHistory()
+        }
+    }
+
     fun refresh() {
         if (lastSearchQuery.isNotEmpty()) {
             search(lastSearchQuery)
@@ -99,7 +114,11 @@ class SearchViewModel(
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SearchViewModel(Creator.getTracksRepository(context), context) as T
+                    return SearchViewModel(
+                        Creator.getTracksRepository(context),
+                        Creator.getSearchHistoryRepository(context),
+                        context
+                    ) as T
                 }
             }
     }

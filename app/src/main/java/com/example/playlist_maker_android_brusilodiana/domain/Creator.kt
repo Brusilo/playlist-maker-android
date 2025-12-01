@@ -3,11 +3,16 @@ package com.example.playlist_maker_android_brusilodiana.creator
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.room.Room
+import com.example.playlist_maker_android_brusilodiana.data.database.AppDatabase
 import com.example.playlist_maker_android_brusilodiana.data.network.ITunesApiService
 import com.example.playlist_maker_android_brusilodiana.data.network.RetrofitNetworkClient
+import com.example.playlist_maker_android_brusilodiana.data.preferences.SearchHistoryPreferences
 import com.example.playlist_maker_android_brusilodiana.data.repository.TracksRepositoryImpl
 import com.example.playlist_maker_android_brusilodiana.data.repository.PlaylistsRepositoryImpl
+import com.example.playlist_maker_android_brusilodiana.data.repository.SearchHistoryRepositoryImpl
 import com.example.playlist_maker_android_brusilodiana.domain.PlaylistsRepository
+import com.example.playlist_maker_android_brusilodiana.domain.SearchHistoryRepository
 import com.example.playlist_maker_android_brusilodiana.domain.TracksRepository
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.PlaylistViewModel
 import okhttp3.OkHttpClient
@@ -19,6 +24,10 @@ import java.util.concurrent.TimeUnit
 object Creator {
     private var retrofit: Retrofit? = null
     private var apiService: ITunesApiService? = null
+
+    private var appDatabase: AppDatabase? = null
+
+    private var searchHistoryPreferences: SearchHistoryPreferences? = null
 
     private fun getRetrofit(): Retrofit {
         if (retrofit == null) {
@@ -49,14 +58,41 @@ object Creator {
         return apiService!!
     }
 
+    fun getAppDatabase(context: Context): AppDatabase {
+        if (appDatabase == null) {
+            appDatabase = Room.databaseBuilder(
+                context,
+                AppDatabase::class.java,
+                AppDatabase.DATABASE_NAME
+            )
+                .fallbackToDestructiveMigration()
+                .build()
+        }
+        return appDatabase!!
+    }
+
+    fun getSearchHistoryPreferences(context: Context): SearchHistoryPreferences {
+        if (searchHistoryPreferences == null) {
+            searchHistoryPreferences = SearchHistoryPreferences.create(context)
+        }
+        return searchHistoryPreferences!!
+    }
+
+    fun getSearchHistoryRepository(context: Context): SearchHistoryRepository {
+        val preferences = getSearchHistoryPreferences(context)
+        return SearchHistoryRepositoryImpl(preferences)
+    }
+
     fun getTracksRepository(context: Context): TracksRepository {
         val apiService = getApiService()
         val networkClient = RetrofitNetworkClient(apiService, context)
-        return TracksRepositoryImpl(networkClient, context)
+        val database = getAppDatabase(context)
+        return TracksRepositoryImpl(networkClient, context, database)
     }
 
     fun getPlaylistsRepository(context: Context): PlaylistsRepository {
-        return PlaylistsRepositoryImpl(context)
+        val database = getAppDatabase(context)
+        return PlaylistsRepositoryImpl(context, database)
     }
 
     fun getPlaylistViewModelFactory(context: Context): ViewModelProvider.Factory =

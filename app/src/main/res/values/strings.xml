@@ -83,5 +83,8 @@
     <string name="invalid_request_type">Неверный тип запроса</string>
     <string name="server_error">Ошибка сервера</string>
     <string name="unknown">Неизвестно</string>
+    <string name="error_title">Ошибка</string>
+    <string name="delete_playlist_error">Не удалось удалить плейлист</string>
+    <string name="ok_button">OK</string>
     <string name="share_playlist_message">Посмотрите мой плейлист \"%s\" в приложении Playlist Maker!</string>
 </resources>
