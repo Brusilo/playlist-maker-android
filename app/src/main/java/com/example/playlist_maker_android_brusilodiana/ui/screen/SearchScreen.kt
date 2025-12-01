@@ -262,7 +262,7 @@ private fun ErrorScreen(
             Button(
                 onClick = onRetryClick,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(id = R.color.purple_500),
+                    containerColor = colorResource(id = R.color.blue_background),
                     contentColor = Color.White
                 )
             ) {

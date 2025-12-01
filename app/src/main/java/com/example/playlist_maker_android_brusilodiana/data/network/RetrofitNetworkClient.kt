@@ -3,6 +3,7 @@ package com.example.playlist_maker_android_brusilodiana.data.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.data.dto.TracksSearchRequest
 import com.example.playlist_maker_android_brusilodiana.data.dto.TracksSearchResponse
 import com.example.playlist_maker_android_brusilodiana.domain.NetworkClient
@@ -10,6 +11,8 @@ import com.example.playlist_maker_android_brusilodiana.domain.models.BaseRespons
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class RetrofitNetworkClient(
     private val api: ITunesApiService,
@@ -21,7 +24,7 @@ class RetrofitNetworkClient(
             if (!isInternetAvailable()) {
                 return BaseResponse().apply {
                     resultCode = -1
-                    errorMessage = "No internet connection"
+                    errorMessage = context.getString(R.string.no_internet_connection)
                 }
             }
 
@@ -40,18 +43,28 @@ class RetrofitNetworkClient(
                 }
                 else -> BaseResponse().apply {
                     resultCode = 400
-                    errorMessage = "Invalid request type: expected TracksSearchRequest"
+                    errorMessage = context.getString(R.string.invalid_request_type)
                 }
+            }
+        } catch (e: UnknownHostException) {
+            BaseResponse().apply {
+                resultCode = -1
+                errorMessage = context.getString(R.string.no_internet_connection)
+            }
+        } catch (e: SocketTimeoutException) {
+            BaseResponse().apply {
+                resultCode = -1
+                errorMessage = context.getString(R.string.connection_timeout)
             }
         } catch (e: IOException) {
             BaseResponse().apply {
                 resultCode = -1
-                errorMessage = "Network error: ${e.message ?: "Unknown IO error"}"
+                errorMessage = context.getString(R.string.network_error_generic, e.message ?: context.getString(R.string.unknown_error))
             }
         } catch (e: Exception) {
             BaseResponse().apply {
                 resultCode = -2
-                errorMessage = "Unexpected error: ${e.message ?: "Unknown error"}"
+                errorMessage = context.getString(R.string.unexpected_error, e.message ?: context.getString(R.string.unknown_error))
             }
         }
     }

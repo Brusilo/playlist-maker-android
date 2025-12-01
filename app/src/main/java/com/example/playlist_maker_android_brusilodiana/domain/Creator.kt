@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlist_maker_android_brusilodiana.data.network.ITunesApiService
 import com.example.playlist_maker_android_brusilodiana.data.network.RetrofitNetworkClient
-import com.example.playlist_maker_android_brusilodiana.data.network.TracksRepositoryImpl
+import com.example.playlist_maker_android_brusilodiana.data.repository.TracksRepositoryImpl
 import com.example.playlist_maker_android_brusilodiana.data.repository.PlaylistsRepositoryImpl
 import com.example.playlist_maker_android_brusilodiana.domain.PlaylistsRepository
 import com.example.playlist_maker_android_brusilodiana.domain.TracksRepository

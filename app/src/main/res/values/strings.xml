@@ -73,6 +73,15 @@
     <string name="error_image_desc">Произошла ошибка</string>
     <string name="no_results_subtitle">Попробуйте другой запрос</string>
     <string name="search_error_title">Что-то пошло не так</string>
-    <string name="retry_button">Повторить</string>
+    <string name="retry_button">Обновить</string>
+    <string name="no_internet_connection">Нет подключения к интернету</string>
+    <string name="connection_timeout">Таймаут соединения</string>
+    <string name="network_error">Ошибка сети</string>
+    <string name="network_error_generic">Ошибка сети: %s</string>
+    <string name="unknown_error">Неизвестная ошибка</string>
+    <string name="unexpected_error">Неожиданная ошибка: %s</string>
+    <string name="invalid_request_type">Неверный тип запроса</string>
+    <string name="server_error">Ошибка сервера</string>
+    <string name="unknown">Неизвестно</string>
     <string name="share_playlist_message">Посмотрите мой плейлист \"%s\" в приложении Playlist Maker!</string>
 </resources>

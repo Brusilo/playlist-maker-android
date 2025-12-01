@@ -4,23 +4,26 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.creator.Creator
 import com.example.playlist_maker_android_brusilodiana.domain.TracksRepository
 import com.example.playlist_maker_android_brusilodiana.domain.states.SearchState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
 
 class SearchViewModel(
-    private val tracksRepository: TracksRepository
+    private val tracksRepository: TracksRepository,
+    private val context: Context
 ) : ViewModel() {
     private val _searchScreenState = MutableStateFlow<SearchState>(SearchState.Initial)
     val searchScreenState = _searchScreenState.asStateFlow()
 
     private var lastSearchQuery: String = ""
     private var isSearching = false
+    private var lastErrorState: SearchState.Fail? = null
 
     fun search(whatSearch: String) {
         if (whatSearch.isEmpty()) {
@@ -45,7 +48,17 @@ class SearchViewModel(
                 }
             } catch (e: Exception) {
                 if (whatSearch == lastSearchQuery && isSearching) {
-                    _searchScreenState.value = SearchState.Fail(e.message ?: "Unknown error")
+                    val errorMessage = when {
+                        e.message?.contains(context.getString(R.string.no_internet_connection), ignoreCase = true) == true ->
+                            context.getString(R.string.no_internet_connection)
+                        e.message?.contains(context.getString(R.string.connection_timeout), ignoreCase = true) == true ->
+                            context.getString(R.string.connection_timeout)
+                        e.message?.contains(context.getString(R.string.network_error), ignoreCase = true) == true ->
+                            context.getString(R.string.network_error_generic, e.message ?: context.getString(R.string.unknown_error))
+                        else -> context.getString(R.string.search_error, e.message ?: context.getString(R.string.unknown_error))
+                    }
+                    lastErrorState = SearchState.Fail(errorMessage)
+                    _searchScreenState.value = lastErrorState!!
                 }
             } finally {
                 isSearching = false
@@ -58,7 +71,7 @@ class SearchViewModel(
         isSearching = true
 
         viewModelScope.launch {
-            delay(500) // Дебаунс 500 мс
+            delay(500)
 
             if (query == lastSearchQuery && isSearching) {
                 search(query)
@@ -69,12 +82,15 @@ class SearchViewModel(
     fun clearSearch() {
         lastSearchQuery = ""
         isSearching = false
+        lastErrorState = null
         _searchScreenState.value = SearchState.Initial
     }
 
     fun refresh() {
         if (lastSearchQuery.isNotEmpty()) {
             search(lastSearchQuery)
+        } else if (lastErrorState != null) {
+            _searchScreenState.value = lastErrorState!!
         }
     }
 
@@ -83,7 +99,7 @@ class SearchViewModel(
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SearchViewModel(Creator.getTracksRepository(context)) as T
+                    return SearchViewModel(Creator.getTracksRepository(context), context) as T
                 }
             }
     }

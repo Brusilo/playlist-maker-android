@@ -1,16 +1,18 @@
-package com.example.playlist_maker_android_brusilodiana.data.network
+package com.example.playlist_maker_android_brusilodiana.data.repository
 
 import android.content.Context
-import com.example.playlist_maker_android_brusilodiana.data.local.DatabaseMock
-import com.example.playlist_maker_android_brusilodiana.domain.models.Track
+import com.example.playlist_maker_android_brusilodiana.R
+import com.example.playlist_maker_android_brusilodiana.data.dto.TrackDto
 import com.example.playlist_maker_android_brusilodiana.data.dto.TracksSearchRequest
 import com.example.playlist_maker_android_brusilodiana.data.dto.TracksSearchResponse
+import com.example.playlist_maker_android_brusilodiana.data.local.DatabaseMock
 import com.example.playlist_maker_android_brusilodiana.domain.NetworkClient
 import com.example.playlist_maker_android_brusilodiana.domain.TracksRepository
-import kotlinx.coroutines.delay
+import com.example.playlist_maker_android_brusilodiana.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -19,38 +21,76 @@ class TracksRepositoryImpl(
     private val context: Context
 ) : TracksRepository {
 
-    private val database = DatabaseMock.getInstance(context)
+    private val database = DatabaseMock.Companion.getInstance(context)
     private val searchResults = mutableListOf<Track>()
 
     override suspend fun searchTracks(expression: String): List<Track> {
         val response = networkClient.doRequest(TracksSearchRequest(expression))
-        delay(1000)
 
-        return if (response.resultCode == 200) {
-            (response as TracksSearchResponse).results.mapNotNull { trackDto ->
-                mapDtoToTrack(trackDto)
-            }.also { tracks ->
-                searchResults.clear()
-                searchResults.addAll(tracks)
+        return when (response.resultCode) {
+            200 -> {
+                val searchResponse = response as TracksSearchResponse
 
-                tracks.forEach { track ->
-                    saveTrackIfNotExists(track)
+                val tracks = searchResponse.results.mapNotNull { trackDto ->
+                    mapDtoToTrack(trackDto)
+                }
+
+                val searchQuery = expression.lowercase().trim()
+                val sortedTracks = tracks.sortedWith(compareByDescending<Track> { track ->
+                    calculateRelevanceScore(track, searchQuery)
+                }.thenBy { it.trackName.lowercase() })
+
+                sortedTracks.also { sortedList ->
+                    searchResults.clear()
+                    searchResults.addAll(sortedList)
+
+                    sortedList.forEach { track ->
+                        saveTrackIfNotExists(track)
+                    }
                 }
             }
-        } else {
-            // Если есть ошибка, можно её логировать
-            if (response.errorMessage != null) {
-                println("Search error: ${response.errorMessage}")
-            }
-            emptyList()
+            -1 -> throw IOException(response.errorMessage ?: context.getString(R.string.network_error))
+            else -> throw Exception(response.errorMessage ?: context.getString(R.string.server_error))
         }
     }
 
-    private fun mapDtoToTrack(dto: com.example.playlist_maker_android_brusilodiana.data.dto.TrackDto): Track? {
+    private fun calculateRelevanceScore(track: Track, searchQuery: String): Int {
+        var score = 0
+        val trackNameLower = track.trackName.lowercase()
+        val artistNameLower = track.artistName.lowercase()
+
+        if (trackNameLower == searchQuery) {
+            score += 10
+        }
+
+        if (trackNameLower.startsWith(searchQuery)) {
+            score += 8
+        }
+
+        if (artistNameLower.startsWith(searchQuery)) {
+            score += 6
+        }
+
+        if (trackNameLower.contains(searchQuery)) {
+            score += 4
+        }
+
+        if (artistNameLower.contains(searchQuery)) {
+            score += 2
+        }
+
+        if (trackNameLower.length < 20) {
+            score += 1
+        }
+
+        return score
+    }
+
+    private fun mapDtoToTrack(dto: TrackDto): Track? {
         return try {
             val id = dto.id ?: 0L
-            val trackName = dto.trackName ?: "Unknown"
-            val artistName = dto.artistName ?: "Unknown"
+            val trackName = dto.trackName ?: context.getString(R.string.unknown)
+            val artistName = dto.artistName ?: context.getString(R.string.unknown)
 
             val trackTimeMillis = dto.trackTimeMillis ?: 0L
             val trackTime = if (trackTimeMillis > 0) {
