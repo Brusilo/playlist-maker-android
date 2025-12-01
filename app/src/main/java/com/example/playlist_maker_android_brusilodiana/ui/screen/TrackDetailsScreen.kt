@@ -53,18 +53,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.domain.models.Track
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.PlaylistViewModel
 import com.example.playlist_maker_android_brusilodiana.creator.Creator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrackDetailsScreen(
-    track: Track,
+    track: Track, // ИЗМЕНЕНО: принимаем объект Track, а не trackId
     onBackClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -126,29 +126,28 @@ fun TrackDetailsScreen(
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.Top
                 ) {
-
-                    if (track.artworkUrl.isNotEmpty()) {
-                        AsyncImage(
-                            model = track.artworkUrl,
-                            contentDescription = track.trackName,
-                            modifier = Modifier
-                                .size(200.dp)
-                                .align(Alignment.CenterHorizontally)
-                                .clip(RoundedCornerShape(8.dp)),
-                            contentScale = ContentScale.Crop,
-                            placeholder = painterResource(id = R.drawable.ic_music),
-                            error = painterResource(id = R.drawable.ic_music)
-                        )
-                    } else {
-
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_music),
-                            contentDescription = track.trackName,
-                            modifier = Modifier
-                                .size(200.dp)
-                                .align(Alignment.CenterHorizontally),
-                            contentScale = ContentScale.Fit
-                        )
+                    Box(
+                        modifier = Modifier
+                            .size(200.dp)
+                            .align(Alignment.CenterHorizontally)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(colorResource(id = R.color.search_field_bg))
+                    ) {
+                        if (track.artworkUrl.isNotEmpty() && track.artworkUrl != "null") {
+                            AsyncImage(
+                                model = track.artworkUrl,
+                                contentDescription = track.trackName,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        } else {
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_music),
+                                contentDescription = track.trackName,
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(40.dp))

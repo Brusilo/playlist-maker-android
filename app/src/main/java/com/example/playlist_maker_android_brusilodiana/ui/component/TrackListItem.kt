@@ -13,8 +13,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.domain.models.Track
 import androidx.compose.foundation.clickable
@@ -29,43 +31,57 @@ fun TrackListItemNew(
             .fillMaxWidth()
             .clickable { onTrackClick() }
             .padding(vertical = 12.dp, horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start,
-            modifier = Modifier.weight(1f)
-        ) {
+        if (track.artworkUrl.isNotEmpty()) {
+            AsyncImage(
+                model = track.artworkUrl,
+                contentDescription = stringResource(R.string.track_image_description, track.trackName),
+                placeholder = painterResource(id = R.drawable.ic_music),
+                error = painterResource(id = R.drawable.ic_music),
+                modifier = Modifier.size(40.dp)
+            )
+        } else {
             Image(
                 painter = painterResource(id = R.drawable.ic_music),
                 contentDescription = stringResource(R.string.track_image_description, track.trackName),
                 modifier = Modifier.size(40.dp)
             )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column(
-                modifier = Modifier.weight(1f),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+        }
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                text = track.trackName,
+                fontSize = 16.sp,
+                color = Color.Black,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
             ) {
                 Text(
-                    text = track.trackName,
-                    fontSize = 16.sp,
-                    color = Color.Black,
-                    maxLines = 1
+                    text = track.artistName,
+                    fontSize = 14.sp,
+                    color = colorResource(R.color.chevron_grey),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false)
                 )
+
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = track.artistName,
+                        text = " • ",
                         fontSize = 14.sp,
-                        color = colorResource(R.color.chevron_grey),
-                        maxLines = 1
-                    )
-                    Text(
-                        stringResource(R.string.dot_separator),
                         color = colorResource(R.color.chevron_grey)
                     )
                     Text(
@@ -76,6 +92,9 @@ fun TrackListItemNew(
                 }
             }
         }
+
+        Spacer(modifier = Modifier.width(8.dp))
+
         Icon(
             imageVector = Icons.Filled.ChevronRight,
             contentDescription = stringResource(R.string.arrow),

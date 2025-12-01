@@ -69,5 +69,10 @@
     <string name="confirm_delete_playlist">Вы уверены, что хотите удалить плейлист?</string>
     <string name="yes_button">Да</string>
     <string name="no_button">Нет</string>
+    <string name="no_results_image_desc">Результатов не найдено</string>
+    <string name="error_image_desc">Произошла ошибка</string>
+    <string name="no_results_subtitle">Попробуйте другой запрос</string>
+    <string name="search_error_title">Что-то пошло не так</string>
+    <string name="retry_button">Повторить</string>
     <string name="share_playlist_message">Посмотрите мой плейлист \"%s\" в приложении Playlist Maker!</string>
 </resources>

@@ -24,6 +24,8 @@ import com.example.playlist_maker_android_brusilodiana.ui.view_model.SearchViewM
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.PlaylistViewModel
 import com.example.playlist_maker_android_brusilodiana.creator.Creator
 import com.example.playlist_maker_android_brusilodiana.domain.models.Track
+import java.net.URLEncoder
+import java.net.URLDecoder
 
 @Composable
 fun PlaylistHost(navController: NavHostController) {
@@ -86,7 +88,14 @@ fun PlaylistHost(navController: NavHostController) {
                 onBackClick = { navigateUp() },
                 viewModel = searchViewModel,
                 onTrackClick = { track: Track ->
-                    navController.navigate("${Screen.TrackDetails.route}/${Uri.encode(track.trackName)}/${Uri.encode(track.artistName)}/${track.trackTime}") {
+                    navController.navigate(
+                        "${Screen.TrackDetails.route}/" +
+                                "${URLEncoder.encode(track.trackName, "UTF-8")}/" +
+                                "${URLEncoder.encode(track.artistName, "UTF-8")}/" +
+                                "${URLEncoder.encode(track.trackTime, "UTF-8")}/" +
+                                "${URLEncoder.encode(track.artworkUrl, "UTF-8")}/" +
+                                "${track.id}"
+                    ) {
                         launchSingleTop = true
                     }
                 }
@@ -124,7 +133,14 @@ fun PlaylistHost(navController: NavHostController) {
             FavoritesScreen(
                 onBackClick = { navigateUp() },
                 onTrackClick = { track: Track ->
-                    navController.navigate("${Screen.TrackDetails.route}/${Uri.encode(track.trackName)}/${Uri.encode(track.artistName)}/${track.trackTime}") {
+                    navController.navigate(
+                        "${Screen.TrackDetails.route}/" +
+                                "${URLEncoder.encode(track.trackName, "UTF-8")}/" +
+                                "${URLEncoder.encode(track.artistName, "UTF-8")}/" +
+                                "${URLEncoder.encode(track.trackTime, "UTF-8")}/" +
+                                "${URLEncoder.encode(track.artworkUrl, "UTF-8")}/" +
+                                "${track.id}"
+                    ) {
                         launchSingleTop = true
                     }
                 }
@@ -146,29 +162,32 @@ fun PlaylistHost(navController: NavHostController) {
         }
 
         composable(
-            "${Screen.TrackDetails.route}/{trackName}/{artistName}/{trackTime}",
+            "${Screen.TrackDetails.route}/{trackName}/{artistName}/{trackTime}/{artworkUrl}/{id}",
             arguments = listOf(
                 navArgument("trackName") { type = NavType.StringType },
                 navArgument("artistName") { type = NavType.StringType },
-                navArgument("trackTime") { type = NavType.StringType }
+                navArgument("trackTime") { type = NavType.StringType },
+                navArgument("artworkUrl") { type = NavType.StringType },
+                navArgument("id") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val trackName = Uri.decode(backStackEntry.arguments?.getString("trackName") ?: "")
-            val artistName = Uri.decode(backStackEntry.arguments?.getString("artistName") ?: "")
-            val trackTime = backStackEntry.arguments?.getString("trackTime") ?: ""
+            val trackName = URLDecoder.decode(backStackEntry.arguments?.getString("trackName") ?: "", "UTF-8")
+            val artistName = URLDecoder.decode(backStackEntry.arguments?.getString("artistName") ?: "", "UTF-8")
+            val trackTime = URLDecoder.decode(backStackEntry.arguments?.getString("trackTime") ?: "", "UTF-8")
+            val artworkUrl = URLDecoder.decode(backStackEntry.arguments?.getString("artworkUrl") ?: "", "UTF-8")
+            val id = backStackEntry.arguments?.getString("id") ?: "0"
 
-            val playlistViewModel: PlaylistViewModel = viewModel(
-                factory = Creator.getPlaylistViewModelFactory(context)
+            val track = Track(
+                id = id.toLongOrNull() ?: 0L,
+                trackName = trackName,
+                artistName = artistName,
+                trackTime = trackTime,
+                artworkUrl = artworkUrl,
+                favorite = false
             )
 
             TrackDetailsScreen(
-                track = Track(
-                    trackName = trackName,
-                    artistName = artistName,
-                    trackTime = trackTime,
-                    favorite = false,
-                    artworkUrl = ""
-                ),
+                track = track,
                 onBackClick = { navigateUp() }
             )
         }
@@ -185,7 +204,14 @@ fun PlaylistHost(navController: NavHostController) {
                 playlistId = playlistId,
                 onBackClick = { navigateUp() },
                 onTrackClick = { track: Track ->
-                    navController.navigate("${Screen.TrackDetails.route}/${Uri.encode(track.trackName)}/${Uri.encode(track.artistName)}/${track.trackTime}") {
+                    navController.navigate(
+                        "${Screen.TrackDetails.route}/" +
+                                "${URLEncoder.encode(track.trackName, "UTF-8")}/" +
+                                "${URLEncoder.encode(track.artistName, "UTF-8")}/" +
+                                "${URLEncoder.encode(track.trackTime, "UTF-8")}/" +
+                                "${URLEncoder.encode(track.artworkUrl, "UTF-8")}/" +
+                                "${track.id}"
+                    ) {
                         launchSingleTop = true
                     }
                 },

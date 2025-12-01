@@ -1,6 +1,7 @@
 package com.example.playlist_maker_android_brusilodiana.ui.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,6 +57,7 @@ import com.example.playlist_maker_android_brusilodiana.ui.view_model.PlaylistVie
 import com.example.playlist_maker_android_brusilodiana.creator.Creator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -110,7 +112,16 @@ fun PlaylistDetailsScreen(
         if (playlist != null) {
             PlaylistDetailsContent(
                 playlist = playlist!!,
-                onTrackClick = onTrackClick,
+                onTrackClick = { track ->
+                    navController?.navigate(
+                        "track_details/" +
+                                "${URLEncoder.encode(track.trackName, "UTF-8")}/" +
+                                "${URLEncoder.encode(track.artistName, "UTF-8")}/" +
+                                "${URLEncoder.encode(track.trackTime, "UTF-8")}/" +
+                                "${URLEncoder.encode(track.artworkUrl, "UTF-8")}/" +
+                                "${track.id}"
+                    )
+                },
                 onOptionsClick = { showOptionsSheet = true },
                 modifier = Modifier
                     .fillMaxSize()
@@ -218,14 +229,11 @@ fun PlaylistDetailsScreen(
                         TextButton(
                             onClick = {
                                 showDeleteDialog = false
-                                // Безопасное удаление с обработкой ошибок
                                 kotlinx.coroutines.MainScope().launch {
                                     try {
-                                        // Удаляем в IO dispatcher
                                         kotlinx.coroutines.withContext(Dispatchers.IO) {
                                             playlistViewModel.deletePlaylist(playlistId)
                                         }
-                                        // Навигация в главном потоке
                                         onBackClick()
                                     } catch (e: Exception) {
                                         e.printStackTrace()
@@ -406,6 +414,8 @@ private fun getTracksCountText(count: Int): String {
 }
 
 private fun calculateTotalMinutes(tracks: List<Track>): Int {
+    if (tracks.isEmpty()) return 0
+
     var totalSeconds = 0
     tracks.forEach { track ->
         val timeParts = track.trackTime.split(":")
@@ -418,5 +428,5 @@ private fun calculateTotalMinutes(tracks: List<Track>): Int {
             totalSeconds += minutes * 60
         }
     }
-    return (totalSeconds / 60).coerceAtLeast(1)
+    return totalSeconds / 60
 }

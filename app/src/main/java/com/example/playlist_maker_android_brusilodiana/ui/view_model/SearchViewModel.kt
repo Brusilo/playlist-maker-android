@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.io.IOException
+import kotlinx.coroutines.delay
 
 class SearchViewModel(
     private val tracksRepository: TracksRepository
@@ -19,20 +19,63 @@ class SearchViewModel(
     private val _searchScreenState = MutableStateFlow<SearchState>(SearchState.Initial)
     val searchScreenState = _searchScreenState.asStateFlow()
 
+    private var lastSearchQuery: String = ""
+    private var isSearching = false
+
     fun search(whatSearch: String) {
+        if (whatSearch.isEmpty()) {
+            _searchScreenState.value = SearchState.Initial
+            return
+        }
+
+        lastSearchQuery = whatSearch
+        isSearching = true
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 _searchScreenState.value = SearchState.Searching
                 val list = tracksRepository.searchTracks(expression = whatSearch)
-                _searchScreenState.value = SearchState.Success(foundList = list)
-            } catch (e: IOException) {
-                _searchScreenState.value = SearchState.Fail(e.message.toString())
+
+                if (whatSearch == lastSearchQuery && isSearching) {
+                    if (list.isEmpty()) {
+                        _searchScreenState.value = SearchState.EmptyResult
+                    } else {
+                        _searchScreenState.value = SearchState.Success(foundList = list)
+                    }
+                }
+            } catch (e: Exception) {
+                if (whatSearch == lastSearchQuery && isSearching) {
+                    _searchScreenState.value = SearchState.Fail(e.message ?: "Unknown error")
+                }
+            } finally {
+                isSearching = false
+            }
+        }
+    }
+
+    fun searchDebounced(query: String) {
+        lastSearchQuery = query
+        isSearching = true
+
+        viewModelScope.launch {
+            delay(500) // Дебаунс 500 мс
+
+            if (query == lastSearchQuery && isSearching) {
+                search(query)
             }
         }
     }
 
     fun clearSearch() {
+        lastSearchQuery = ""
+        isSearching = false
         _searchScreenState.value = SearchState.Initial
+    }
+
+    fun refresh() {
+        if (lastSearchQuery.isNotEmpty()) {
+            search(lastSearchQuery)
+        }
     }
 
     companion object {

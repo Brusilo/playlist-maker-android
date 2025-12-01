@@ -10,5 +10,6 @@ data class Track(
     val artistName: String,
     val trackTime: String,
     val favorite: Boolean = false,
-    val artworkUrl: String = ""
+    val artworkUrl: String = "",
+    val previewUrl: String = ""
 ) : Parcelable

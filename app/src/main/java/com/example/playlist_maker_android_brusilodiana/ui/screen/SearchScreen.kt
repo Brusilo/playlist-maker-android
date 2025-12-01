@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.example.playlist_maker_android_brusilodiana.ui.screen
 
 import androidx.compose.foundation.Image
@@ -15,6 +13,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -33,6 +33,7 @@ import com.example.playlist_maker_android_brusilodiana.domain.states.SearchState
 import com.example.playlist_maker_android_brusilodiana.ui.component.TrackListItemNew
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.SearchViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
     onBackClick: () -> Unit,
@@ -48,7 +49,6 @@ fun SearchScreen(
             .fillMaxSize()
             .background(colorResource(id = R.color.white))
     ) {
-
         TopAppBar(
             title = {
                 Text(
@@ -76,7 +76,6 @@ fun SearchScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-
             OutlinedTextField(
                 value = query,
                 onValueChange = {
@@ -95,23 +94,27 @@ fun SearchScreen(
                     }
                 ),
                 leadingIcon = {
-                    Icon(
-                        modifier = Modifier.clickable {
+                    IconButton(
+                        onClick = {
                             if (query.isNotEmpty()) {
                                 viewModel.search(query)
                                 keyboardController?.hide()
                             }
-                        },
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = stringResource(R.string.search_icon),
-                        tint = colorResource(id = R.color.black)
-                    )
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = stringResource(R.string.search_icon),
+                            tint = colorResource(id = R.color.black)
+                        )
+                    }
                 },
                 trailingIcon = {
                     if (query.isNotEmpty()) {
                         IconButton(onClick = {
                             query = ""
                             viewModel.clearSearch()
+                            keyboardController?.hide()
                         }) {
                             Icon(
                                 Icons.Filled.Clear,
@@ -166,46 +169,104 @@ fun SearchScreen(
                             }
                         }
                     } else {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(top = 32.dp),
-                            contentAlignment = Alignment.TopCenter
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.img1),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(120.dp)
-                                )
-                                Text(
-                                    stringResource(R.string.no_results),
-                                    color = colorResource(id = R.color.black),
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                        }
+                        EmptyResultScreen()
                     }
                 }
 
-                is SearchState.Fail -> {
-                    val error = (screenState as SearchState.Fail).error
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(top = 48.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            stringResource(R.string.search_error, error),
-                            color = colorResource(id = R.color.red)
-                        )
-                    }
+                is SearchState.EmptyResult -> {
+                    EmptyResultScreen()
                 }
+
+                is SearchState.Fail -> {
+                    ErrorScreen(
+                        errorMessage = (screenState as SearchState.Fail).error,
+                        onRetryClick = { viewModel.refresh() }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun EmptyResultScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 32.dp),
+        contentAlignment = Alignment.TopCenter
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.img1),
+                contentDescription = stringResource(R.string.no_results_image_desc),
+                modifier = Modifier.size(120.dp)
+            )
+            Text(
+                stringResource(R.string.no_results),
+                color = colorResource(id = R.color.black),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                stringResource(R.string.no_results_subtitle),
+                color = colorResource(id = R.color.gray),
+                fontSize = 14.sp
+            )
+        }
+    }
+}
+
+@Composable
+private fun ErrorScreen(
+    errorMessage: String,
+    onRetryClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 48.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(24.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.img2),
+                contentDescription = stringResource(R.string.error_image_desc),
+                modifier = Modifier.size(120.dp)
+            )
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    stringResource(R.string.search_error_title),
+                    color = colorResource(id = R.color.black),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    errorMessage,
+                    color = colorResource(id = R.color.gray),
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            Button(
+                onClick = onRetryClick,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorResource(id = R.color.purple_500),
+                    contentColor = Color.White
+                )
+            ) {
+                Text(stringResource(R.string.retry_button))
             }
         }
     }
