@@ -100,9 +100,12 @@ class TracksRepositoryImpl(
 
             val trackTimeMillis = dto.trackTimeMillis ?: 0L
             val trackTime = if (trackTimeMillis > 0) {
-                SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)
+                SimpleDateFormat(
+                    context.getString(R.string.track_time_format),
+                    Locale.getDefault()
+                ).format(trackTimeMillis)
             } else {
-                "00:00"
+                context.getString(R.string.default_track_time)
             }
 
             Track(
@@ -127,9 +130,12 @@ class TracksRepositoryImpl(
                 )
                 tracksDao.insertTrack(trackEntity)
             } else {
-                val updatedEntity = track.toEntity().copy(
-                    id = existingTrack.id,
-                    favorite = existingTrack.favorite,
+                val updatedEntity = existingTrack.copy(
+                    trackName = track.trackName,
+                    artistName = track.artistName,
+                    trackTime = track.trackTime,
+                    artworkUrl = track.artworkUrl,
+                    previewUrl = track.previewUrl,
                     externalId = if (track.id > 0) track.id else existingTrack.externalId
                 )
                 tracksDao.insertTrack(updatedEntity)
@@ -173,15 +179,18 @@ class TracksRepositoryImpl(
 
     override suspend fun updateTrackFavoriteStatus(track: Track, isFavorite: Boolean) {
         withContext(Dispatchers.IO) {
-            val trackEntity = getOrCreateTrack(track)
+            val existingTrack = tracksDao.getTrackByNameAndArtist(track.trackName, track.artistName).first()
 
-            tracksDao.updateFavoriteStatus(trackEntity.id, isFavorite)
+            existingTrack?.let { trackEntity ->
+                val updatedEntity = trackEntity.copy(favorite = isFavorite)
+                tracksDao.insertTrack(updatedEntity)
 
-            val index = searchResults.indexOfFirst {
-                it.trackName == track.trackName && it.artistName == track.artistName
-            }
-            if (index != -1) {
-                searchResults[index] = searchResults[index].copy(favorite = isFavorite)
+                val index = searchResults.indexOfFirst {
+                    it.trackName == track.trackName && it.artistName == track.artistName
+                }
+                if (index != -1) {
+                    searchResults[index] = searchResults[index].copy(favorite = isFavorite)
+                }
             }
         }
     }
@@ -206,9 +215,12 @@ class TracksRepositoryImpl(
         val existingEntity = tracksDao.getTrackByNameAndArtist(track.trackName, track.artistName).first()
 
         return if (existingEntity != null) {
-            val updatedEntity = track.toEntity().copy(
-                id = existingEntity.id,
-                favorite = existingEntity.favorite,
+            val updatedEntity = existingEntity.copy(
+                trackName = track.trackName,
+                artistName = track.artistName,
+                trackTime = track.trackTime,
+                artworkUrl = track.artworkUrl,
+                previewUrl = track.previewUrl,
                 externalId = existingEntity.externalId ?: if (track.id > 0) track.id else null
             )
             tracksDao.insertTrack(updatedEntity)

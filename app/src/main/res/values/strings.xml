@@ -86,5 +86,10 @@
     <string name="error_title">Ошибка</string>
     <string name="delete_playlist_error">Не удалось удалить плейлист</string>
     <string name="ok_button">OK</string>
+    <string name="delete_track_dialog_title">Вы уверены, что хотите удалить трек?</string>
+    <string name="delete_track_dialog_yes">Да</string>
+    <string name="delete_track_dialog_no">Нет</string>
+    <string name="track_time_format">mm:ss</string>
+    <string name="default_track_time">00:00</string>
     <string name="share_playlist_message">Посмотрите мой плейлист \"%s\" в приложении Playlist Maker!</string>
 </resources>

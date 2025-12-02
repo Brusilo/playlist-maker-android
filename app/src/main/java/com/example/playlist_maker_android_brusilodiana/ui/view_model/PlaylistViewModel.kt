@@ -36,6 +36,12 @@ class PlaylistViewModel(private val context: Context) : ViewModel() {
         }
     }
 
+    fun removeTrackFromFavorites(track: Track) {
+        viewModelScope.launch(Dispatchers.IO) {
+            tracksRepository.updateTrackFavoriteStatus(track, false)
+        }
+    }
+
     fun getPlaylistById(playlistId: Long): Flow<Playlist?> {
         return playlistsRepository.getPlaylist(playlistId)
     }

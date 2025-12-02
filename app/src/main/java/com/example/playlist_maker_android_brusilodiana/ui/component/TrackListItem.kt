@@ -2,6 +2,7 @@ package com.example.playlist_maker_android_brusilodiana.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Icon
@@ -19,17 +20,20 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.domain.models.Track
-import androidx.compose.foundation.clickable
 
 @Composable
 fun TrackListItemNew(
     track: Track,
-    onTrackClick: () -> Unit = {}
+    onTrackClick: () -> Unit = {},
+    onLongClick: () -> Unit = {}
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onTrackClick() }
+            .combinedClickable(
+                onClick = onTrackClick,
+                onLongClick = onLongClick
+            )
             .padding(vertical = 12.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

@@ -14,7 +14,6 @@ interface TracksRepository {
 
     suspend fun insertTrackToPlaylist(track: Track, playlistId: Long)
 
-
     suspend fun updateTrackFavoriteStatus(track: Track, isFavorite: Boolean)
 
     fun getTrackById(trackId: Long): Flow<Track?>

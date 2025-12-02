@@ -17,8 +17,7 @@ import androidx.room.Index
         ForeignKey(
             entity = TrackEntity::class,
             parentColumns = ["id"],
-            childColumns = ["trackId"],
-            onDelete = ForeignKey.Companion.CASCADE
+            childColumns = ["trackId"]
         )
     ],
     indices = [
