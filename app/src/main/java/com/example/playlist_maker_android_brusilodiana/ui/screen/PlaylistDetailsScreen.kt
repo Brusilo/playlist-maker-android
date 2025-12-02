@@ -1,7 +1,7 @@
 package com.example.playlist_maker_android_brusilodiana.ui.screen
 
+import android.net.Uri
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,12 +43,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.domain.models.Playlist
 import com.example.playlist_maker_android_brusilodiana.domain.models.Track
@@ -317,7 +319,7 @@ fun PlaylistHeader(playlist: Playlist, onOptionsClick: () -> Unit) {
     ) {
         Box(
             modifier = Modifier
-                .size(120.dp)
+                .size(200.dp)
                 .background(
                     color = colorResource(id = R.color.white),
                     shape = RoundedCornerShape(12.dp)
@@ -330,12 +332,23 @@ fun PlaylistHeader(playlist: Playlist, onOptionsClick: () -> Unit) {
                 .align(Alignment.CenterHorizontally),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
-                imageVector = Icons.Filled.LibraryMusic,
-                contentDescription = null,
-                modifier = Modifier.size(48.dp),
-                tint = colorResource(id = R.color.gray)
-            )
+            if (playlist.coverImageUri != null) {
+                AsyncImage(
+                    model = Uri.parse(playlist.coverImageUri),
+                    contentDescription = stringResource(R.string.playlist_cover),
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                    placeholder = painterResource(id = R.drawable.ic_music),
+                    error = painterResource(id = R.drawable.ic_music)
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Filled.LibraryMusic,
+                    contentDescription = null,
+                    modifier = Modifier.size(64.dp),
+                    tint = colorResource(id = R.color.gray)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(24.dp))

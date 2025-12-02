@@ -10,9 +10,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.playlist_maker_android_brusilodiana.ui.activity.MainScreen
 import androidx.core.content.ContextCompat.startActivity
 import com.example.playlist_maker_android_brusilodiana.R
+import com.example.playlist_maker_android_brusilodiana.ui.activity.MainScreen
 import com.example.playlist_maker_android_brusilodiana.ui.screen.SearchScreen
 import com.example.playlist_maker_android_brusilodiana.ui.screen.SettingsScreen
 import com.example.playlist_maker_android_brusilodiana.ui.screen.PlaylistsScreen
@@ -154,8 +154,8 @@ fun PlaylistHost(navController: NavHostController) {
 
             CreatePlaylistScreen(
                 onBackClick = { navigateUp() },
-                onCreatePlaylist = { name, description ->
-                    playlistViewModel.createNewPlaylist(name, description)
+                onCreatePlaylist = { name, description, coverImageUri ->
+                    playlistViewModel.createNewPlaylist(name, description, coverImageUri)
                     navigateUp()
                 }
             )

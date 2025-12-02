@@ -16,7 +16,7 @@ import com.example.playlist_maker_android_brusilodiana.data.database.entity.Trac
         PlaylistEntity::class,
         PlaylistTrackJoin::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

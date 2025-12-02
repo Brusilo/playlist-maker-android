@@ -1,15 +1,23 @@
 package com.example.playlist_maker_android_brusilodiana.ui.screen
 
+import android.Manifest
+import android.net.Uri
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -33,22 +41,47 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import coil.compose.AsyncImage
 import com.example.playlist_maker_android_brusilodiana.R
+import com.example.playlist_maker_android_brusilodiana.data.ImageUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreatePlaylistScreen(
     onBackClick: () -> Unit,
-    onCreatePlaylist: (String, String) -> Unit
+    onCreatePlaylist: (String, String, String?) -> Unit
 ) {
     var playlistName by remember { mutableStateOf("") }
     var playlistDescription by remember { mutableStateOf("") }
+    var coverImageUri by remember { mutableStateOf<String?>(null) }
+    val context = LocalContext.current
+
+    val pickMediaLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        uri?.let {
+            val savedUri = ImageUtils.saveImageToAppStorage(context, it)
+            coverImageUri = savedUri
+        }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            pickMediaLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+    }
 
     Scaffold(
         containerColor = colorResource(id = R.color.white),
@@ -90,7 +123,7 @@ fun CreatePlaylistScreen(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(120.dp)
+                        .size(200.dp)
                         .background(
                             color = colorResource(id = R.color.white),
                             shape = RoundedCornerShape(12.dp)
@@ -100,15 +133,39 @@ fun CreatePlaylistScreen(
                             color = colorResource(id = R.color.gray),
                             shape = RoundedCornerShape(12.dp)
                         )
+                        .clickable {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                pickMediaLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                            } else {
+                                val permission = Manifest.permission.READ_EXTERNAL_STORAGE
+                                if (ContextCompat.checkSelfPermission(context, permission) ==
+                                    android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                                    pickMediaLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                                } else {
+                                    permissionLauncher.launch(permission)
+                                }
+                            }
+                        }
                         .align(Alignment.CenterHorizontally),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.LibraryMusic,
-                        contentDescription = null,
-                        modifier = Modifier.size(48.dp),
-                        tint = colorResource(id = R.color.gray)
-                    )
+                    if (coverImageUri != null) {
+                        AsyncImage(
+                            model = Uri.parse(coverImageUri),
+                            contentDescription = stringResource(R.string.playlist_cover),
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop,
+                            placeholder = painterResource(id = R.drawable.ic_music),
+                            error = painterResource(id = R.drawable.ic_music)
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Filled.LibraryMusic,
+                            contentDescription = stringResource(R.string.add_cover),
+                            modifier = Modifier.size(64.dp),
+                            tint = colorResource(id = R.color.gray)
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -225,11 +282,10 @@ fun CreatePlaylistScreen(
                     )
                 }
             }
-
             Button(
                 onClick = {
                     if (playlistName.isNotEmpty()) {
-                        onCreatePlaylist(playlistName, playlistDescription)
+                        onCreatePlaylist(playlistName, playlistDescription, coverImageUri)
                     }
                 },
                 modifier = Modifier

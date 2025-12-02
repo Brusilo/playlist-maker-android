@@ -1,5 +1,6 @@
 package com.example.playlist_maker_android_brusilodiana.ui.component
 
+import android.net.Uri
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,9 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.domain.models.Playlist
 
@@ -38,12 +42,23 @@ fun PlaylistListItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Icon(
-            imageVector = Icons.Filled.LibraryMusic,
-            contentDescription = playlist.name,
-            modifier = Modifier.size(48.dp),
-            tint = Color.Gray
-        )
+        if (playlist.coverImageUri != null) {
+            AsyncImage(
+                model = Uri.parse(playlist.coverImageUri),
+                contentDescription = playlist.name,
+                modifier = Modifier.size(48.dp),
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(id = R.drawable.ic_music),
+                error = painterResource(id = R.drawable.ic_music)
+            )
+        } else {
+            Icon(
+                imageVector = Icons.Filled.LibraryMusic,
+                contentDescription = playlist.name,
+                modifier = Modifier.size(48.dp),
+                tint = Color.Gray
+            )
+        }
 
         Column(
             modifier = Modifier

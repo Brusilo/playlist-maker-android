@@ -9,6 +9,7 @@ fun PlaylistEntity.toPlaylist(tracks: List<Track> = emptyList()): Playlist {
         id = this.id,
         name = this.name,
         description = this.description,
+        coverImageUri = this.coverImageUri,
         tracks = tracks
     )
 }
@@ -17,6 +18,7 @@ fun Playlist.toEntity(): PlaylistEntity {
     return PlaylistEntity(
         id = this.id,
         name = this.name,
-        description = this.description
+        description = this.description,
+        coverImageUri = this.coverImageUri
     )
 }

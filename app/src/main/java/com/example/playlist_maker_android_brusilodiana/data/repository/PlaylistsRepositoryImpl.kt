@@ -57,11 +57,12 @@ class PlaylistsRepositoryImpl(
         }
     }
 
-    override suspend fun addNewPlaylist(name: String, description: String) {
+    override suspend fun addNewPlaylist(name: String, description: String, coverImageUri: String?) {
         withContext(Dispatchers.IO) {
             val playlistEntity = com.example.playlist_maker_android_brusilodiana.data.database.entity.PlaylistEntity(
                 name = name,
-                description = description
+                description = description,
+                coverImageUri = coverImageUri  // Сохранить URI обложки
             )
             playlistsDao.insertPlaylist(playlistEntity)
         }

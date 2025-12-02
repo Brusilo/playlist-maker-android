@@ -92,4 +92,9 @@
     <string name="track_time_format">mm:ss</string>
     <string name="default_track_time">00:00</string>
     <string name="share_playlist_message">Посмотрите мой плейлист \"%s\" в приложении Playlist Maker!</string>
+    <string name="playlist_cover">Обложка плейлиста</string>
+    <string name="add_cover">Добавить обложку</string>
+    <string name="select_image">Выбрать изображение</string>
+    <string name="permission_required">Для выбора обложки необходимо разрешение на доступ к файлам</string>
+    <string name="cover_title">Обложка</string>
 </resources>
