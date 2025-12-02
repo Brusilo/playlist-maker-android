@@ -11,16 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -30,7 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -62,13 +52,13 @@ fun PlaylistsScreen(
     var showError by remember { mutableStateOf(false) }
 
     Scaffold(
-        containerColor = colorResource(id = R.color.white),
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
                     Text(
                         text = stringResource(R.string.playlists_screen_title),
-                        color = colorResource(id = R.color.black),
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -78,25 +68,25 @@ fun PlaylistsScreen(
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back_button),
-                            tint = colorResource(id = R.color.black)
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = colorResource(id = R.color.white)
+                    containerColor = MaterialTheme.colorScheme.background
                 )
             )
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onCreateNewPlaylist() },
-                containerColor = colorResource(id = R.color.gray),
-                contentColor = colorResource(id = R.color.white)
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = stringResource(R.string.add_playlist),
-                    tint = colorResource(id = R.color.white)
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }
@@ -113,7 +103,7 @@ fun PlaylistsScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.playlists_empty_message),
-                        color = colorResource(id = R.color.gray),
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                         fontSize = 16.sp
                     )
                 }
@@ -162,7 +152,7 @@ fun PlaylistsScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.no_button),
-                            color = colorResource(id = R.color.black)
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
                     TextButton(
@@ -183,7 +173,7 @@ fun PlaylistsScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.yes_button),
-                            color = colorResource(id = R.color.black)
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 }

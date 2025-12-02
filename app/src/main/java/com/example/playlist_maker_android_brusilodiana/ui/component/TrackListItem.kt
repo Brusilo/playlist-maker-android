@@ -6,12 +6,11 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -62,7 +61,7 @@ fun TrackListItemNew(
             Text(
                 text = track.trackName,
                 fontSize = 16.sp,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -74,7 +73,7 @@ fun TrackListItemNew(
                 Text(
                     text = track.artistName,
                     fontSize = 14.sp,
-                    color = colorResource(R.color.chevron_grey),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f, fill = false)
@@ -86,12 +85,12 @@ fun TrackListItemNew(
                     Text(
                         text = " • ",
                         fontSize = 14.sp,
-                        color = colorResource(R.color.chevron_grey)
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
                     Text(
                         text = track.trackTime,
                         fontSize = 14.sp,
-                        color = colorResource(R.color.chevron_grey)
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
                 }
             }
@@ -102,7 +101,7 @@ fun TrackListItemNew(
         Icon(
             imageVector = Icons.Filled.ChevronRight,
             contentDescription = stringResource(R.string.arrow),
-            tint = colorResource(R.color.chevron_grey),
+            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
             modifier = Modifier.size(20.dp)
         )
     }

@@ -10,29 +10,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.LibraryMusic
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -84,13 +67,13 @@ fun CreatePlaylistScreen(
     }
 
     Scaffold(
-        containerColor = colorResource(id = R.color.white),
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
                     Text(
                         text = stringResource(R.string.create_playlist_screen_title),
-                        color = colorResource(id = R.color.black),
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -100,12 +83,12 @@ fun CreatePlaylistScreen(
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back_button),
-                            tint = colorResource(id = R.color.black)
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = colorResource(id = R.color.white)
+                    containerColor = MaterialTheme.colorScheme.background
                 )
             )
         }
@@ -125,12 +108,12 @@ fun CreatePlaylistScreen(
                     modifier = Modifier
                         .size(200.dp)
                         .background(
-                            color = colorResource(id = R.color.white),
+                            color = MaterialTheme.colorScheme.surface,
                             shape = RoundedCornerShape(12.dp)
                         )
                         .border(
                             width = 2.dp,
-                            color = colorResource(id = R.color.gray),
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                             shape = RoundedCornerShape(12.dp)
                         )
                         .clickable {
@@ -163,7 +146,7 @@ fun CreatePlaylistScreen(
                             imageVector = Icons.Filled.LibraryMusic,
                             contentDescription = stringResource(R.string.add_cover),
                             modifier = Modifier.size(64.dp),
-                            tint = colorResource(id = R.color.gray)
+                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
                     }
                 }
@@ -175,7 +158,7 @@ fun CreatePlaylistScreen(
                     modifier = Modifier.fillMaxWidth(),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
-                    color = colorResource(id = R.color.black)
+                    color = MaterialTheme.colorScheme.onBackground
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -185,12 +168,12 @@ fun CreatePlaylistScreen(
                         .fillMaxWidth()
                         .height(56.dp)
                         .background(
-                            color = colorResource(id = R.color.white),
+                            color = MaterialTheme.colorScheme.surface,
                             shape = RoundedCornerShape(8.dp)
                         )
                         .border(
                             width = 1.dp,
-                            color = colorResource(id = R.color.gray),
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                             shape = RoundedCornerShape(8.dp)
                         )
                         .clip(RoundedCornerShape(8.dp))
@@ -205,7 +188,7 @@ fun CreatePlaylistScreen(
                             .padding(vertical = 8.dp),
                         textStyle = TextStyle(
                             fontSize = 16.sp,
-                            color = colorResource(id = R.color.black)
+                            color = MaterialTheme.colorScheme.onBackground
                         ),
                         decorationBox = { innerTextField ->
                             Box(
@@ -216,7 +199,7 @@ fun CreatePlaylistScreen(
                                     Text(
                                         text = stringResource(R.string.playlist_name_hint),
                                         fontSize = 16.sp,
-                                        color = colorResource(id = R.color.gray)
+                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                                     )
                                 }
                                 innerTextField()
@@ -232,7 +215,7 @@ fun CreatePlaylistScreen(
                     modifier = Modifier.fillMaxWidth(),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
-                    color = colorResource(id = R.color.black)
+                    color = MaterialTheme.colorScheme.onBackground
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -242,12 +225,12 @@ fun CreatePlaylistScreen(
                         .fillMaxWidth()
                         .height(56.dp)
                         .background(
-                            color = colorResource(id = R.color.white),
+                            color = MaterialTheme.colorScheme.surface,
                             shape = RoundedCornerShape(8.dp)
                         )
                         .border(
                             width = 1.dp,
-                            color = colorResource(id = R.color.gray),
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                             shape = RoundedCornerShape(8.dp)
                         )
                         .clip(RoundedCornerShape(8.dp))
@@ -262,7 +245,7 @@ fun CreatePlaylistScreen(
                             .padding(vertical = 8.dp),
                         textStyle = TextStyle(
                             fontSize = 16.sp,
-                            color = colorResource(id = R.color.black)
+                            color = MaterialTheme.colorScheme.onBackground
                         ),
                         decorationBox = { innerTextField ->
                             Box(
@@ -273,7 +256,7 @@ fun CreatePlaylistScreen(
                                     Text(
                                         text = stringResource(R.string.playlist_description_hint),
                                         fontSize = 16.sp,
-                                        color = colorResource(id = R.color.gray)
+                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                                     )
                                 }
                                 innerTextField()
@@ -294,14 +277,15 @@ fun CreatePlaylistScreen(
                 enabled = playlistName.isNotEmpty(),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(id = R.color.blue_background),
-                    disabledContainerColor = colorResource(id = R.color.gray)
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
                 )
             ) {
                 Text(
                     text = stringResource(R.string.create_button),
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }

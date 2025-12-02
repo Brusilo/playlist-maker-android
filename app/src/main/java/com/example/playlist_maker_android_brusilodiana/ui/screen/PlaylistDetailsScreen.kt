@@ -2,17 +2,8 @@ package com.example.playlist_maker_android_brusilodiana.ui.screen
 
 import android.net.Uri
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,18 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -42,7 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -85,13 +64,13 @@ fun PlaylistDetailsScreen(
     }
 
     Scaffold(
-        containerColor = colorResource(id = R.color.white),
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
                     Text(
                         text = stringResource(R.string.playlist_details_screen_title),
-                        color = colorResource(id = R.color.black),
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -101,12 +80,12 @@ fun PlaylistDetailsScreen(
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back_button),
-                            tint = colorResource(id = R.color.black)
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = colorResource(id = R.color.white)
+                    containerColor = MaterialTheme.colorScheme.background
                 )
             )
         }
@@ -136,10 +115,8 @@ fun PlaylistDetailsScreen(
                     .padding(16.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = stringResource(R.string.loading_text),
-                    fontSize = 16.sp,
-                    color = colorResource(id = R.color.gray)
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -159,12 +136,12 @@ fun PlaylistDetailsScreen(
                         text = playlist!!.name,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = colorResource(id = R.color.black)
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                     Text(
                         text = getTracksCountText(playlist!!.tracks.size),
                         fontSize = 14.sp,
-                        color = colorResource(id = R.color.gray),
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                         modifier = Modifier.padding(top = 4.dp)
                     )
                     Spacer(modifier = Modifier.height(24.dp))
@@ -177,7 +154,7 @@ fun PlaylistDetailsScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.share_playlist),
-                            color = colorResource(id = R.color.black),
+                            color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = androidx.compose.ui.text.style.TextAlign.Start
                         )
@@ -192,7 +169,7 @@ fun PlaylistDetailsScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.delete_playlist),
-                            color = colorResource(id = R.color.black),
+                            color = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = androidx.compose.ui.text.style.TextAlign.Start
                         )
@@ -225,7 +202,7 @@ fun PlaylistDetailsScreen(
                         ) {
                             Text(
                                 text = stringResource(R.string.no_button),
-                                color = colorResource(id = R.color.black)
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         }
                         TextButton(
@@ -246,7 +223,7 @@ fun PlaylistDetailsScreen(
                         ) {
                             Text(
                                 text = stringResource(R.string.yes_button),
-                                color = colorResource(id = R.color.black)
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         }
                     }
@@ -321,12 +298,12 @@ fun PlaylistHeader(playlist: Playlist, onOptionsClick: () -> Unit) {
             modifier = Modifier
                 .size(200.dp)
                 .background(
-                    color = colorResource(id = R.color.white),
+                    color = MaterialTheme.colorScheme.surface,
                     shape = RoundedCornerShape(12.dp)
                 )
                 .border(
                     width = 2.dp,
-                    color = colorResource(id = R.color.gray),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                     shape = RoundedCornerShape(12.dp)
                 )
                 .align(Alignment.CenterHorizontally),
@@ -346,7 +323,7 @@ fun PlaylistHeader(playlist: Playlist, onOptionsClick: () -> Unit) {
                     imageVector = Icons.Filled.LibraryMusic,
                     contentDescription = null,
                     modifier = Modifier.size(64.dp),
-                    tint = colorResource(id = R.color.gray)
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                 )
             }
         }
@@ -357,7 +334,7 @@ fun PlaylistHeader(playlist: Playlist, onOptionsClick: () -> Unit) {
             text = playlist.name,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = colorResource(id = R.color.black)
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -366,7 +343,7 @@ fun PlaylistHeader(playlist: Playlist, onOptionsClick: () -> Unit) {
             Text(
                 text = playlist.description,
                 fontSize = 16.sp,
-                color = colorResource(id = R.color.gray)
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
@@ -380,7 +357,7 @@ fun PlaylistHeader(playlist: Playlist, onOptionsClick: () -> Unit) {
             Text(
                 text = stringResource(R.string.minutes_count, totalMinutes),
                 fontSize = 14.sp,
-                color = colorResource(id = R.color.gray)
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -388,7 +365,7 @@ fun PlaylistHeader(playlist: Playlist, onOptionsClick: () -> Unit) {
             Text(
                 text = stringResource(R.string.dot_separator),
                 fontSize = 14.sp,
-                color = colorResource(id = R.color.gray)
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -396,7 +373,7 @@ fun PlaylistHeader(playlist: Playlist, onOptionsClick: () -> Unit) {
             Text(
                 text = getTracksCountText(tracksCount),
                 fontSize = 14.sp,
-                color = colorResource(id = R.color.gray)
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
         }
 
@@ -409,7 +386,7 @@ fun PlaylistHeader(playlist: Playlist, onOptionsClick: () -> Unit) {
             Icon(
                 imageVector = Icons.Filled.MoreVert,
                 contentDescription = stringResource(R.string.options_button),
-                tint = colorResource(id = R.color.gray)
+                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
         }
 

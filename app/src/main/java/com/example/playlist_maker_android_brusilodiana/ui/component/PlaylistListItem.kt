@@ -11,11 +11,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -56,7 +56,7 @@ fun PlaylistListItem(
                 imageVector = Icons.Filled.LibraryMusic,
                 contentDescription = playlist.name,
                 modifier = Modifier.size(48.dp),
-                tint = Color.Gray
+                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
         }
 
@@ -68,7 +68,8 @@ fun PlaylistListItem(
         ) {
             Text(
                 text = playlist.name,
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onBackground
             )
             val tracksCount = playlist.tracks.size
             val tracksSuffix = when {
@@ -84,7 +85,7 @@ fun PlaylistListItem(
             Text(
                 text = tracksText,
                 fontSize = 11.sp,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
         }
     }

@@ -17,25 +17,37 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.example.playlist_maker_android_brusilodiana.R
+import com.example.playlist_maker_android_brusilodiana.data.preferences.ThemePreferences
 import com.example.playlist_maker_android_brusilodiana.navigation.PlaylistHost
+import com.example.playlist_maker_android_brusilodiana.ui.theme.MyApplicationTheme
+import com.example.playlist_maker_android_brusilodiana.ui.theme.BlueBackgroundLight
+import com.example.playlist_maker_android_brusilodiana.ui.view_model.ThemeViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val navController = rememberNavController()
-            PlaylistHost(navController = navController)
+            val themeViewModel = remember {
+                ThemeViewModel(ThemePreferences.create(this))
+            }
+            val darkTheme = themeViewModel.darkTheme.collectAsState(initial = false)
+
+            MyApplicationTheme(darkTheme = darkTheme.value) {
+                val navController = rememberNavController()
+                PlaylistHost(navController = navController)
+            }
         }
     }
 }
@@ -47,16 +59,10 @@ fun MainScreen(
     onNavigateToPlaylists: () -> Unit,
     onNavigateToFavorites: () -> Unit
 ) {
-    val title = stringResource(R.string.main_screen_title)
-    val search = stringResource(R.string.search_button)
-    val playlists = stringResource(R.string.playlists_button)
-    val favorites = stringResource(R.string.favorites_button)
-    val settings = stringResource(R.string.settings_button)
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(R.color.blue_background))
+            .background(BlueBackgroundLight)
     ) {
         Column(
             modifier = Modifier
@@ -65,7 +71,7 @@ fun MainScreen(
             horizontalAlignment = Alignment.Start
         ) {
             Text(
-                text = title,
+                text = stringResource(R.string.main_screen_title),
                 color = Color.White,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
@@ -78,7 +84,7 @@ fun MainScreen(
                 .fillMaxHeight(0.9f)
                 .align(Alignment.BottomCenter)
                 .background(
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.surface,
                     shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
                 )
                 .padding(horizontal = 24.dp, vertical = 16.dp),
@@ -86,10 +92,10 @@ fun MainScreen(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            MenuItem(search, Icons.Filled.Search) { onNavigateToSearch() }
-            MenuItem(playlists, Icons.Filled.List) { onNavigateToPlaylists() }
-            MenuItem(favorites, Icons.Filled.Favorite) { onNavigateToFavorites() }
-            MenuItem(settings, Icons.Filled.Settings) { onNavigateToSettings() }
+            MenuItem(stringResource(R.string.search_button), Icons.Filled.Search) { onNavigateToSearch() }
+            MenuItem(stringResource(R.string.playlists_button), Icons.Filled.List) { onNavigateToPlaylists() }
+            MenuItem(stringResource(R.string.favorites_button), Icons.Filled.Favorite) { onNavigateToFavorites() }
+            MenuItem(stringResource(R.string.settings_button), Icons.Filled.Settings) { onNavigateToSettings() }
         }
     }
 }
@@ -120,13 +126,14 @@ fun MenuItem(
             text = title,
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.weight(1f)
         )
 
         Icon(
             imageVector = Icons.Filled.ChevronRight,
             contentDescription = null,
-            tint = colorResource(R.color.chevron_grey),
+            tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.size(20.dp)
         )
     }

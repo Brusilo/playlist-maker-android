@@ -1,19 +1,10 @@
 package com.example.playlist_maker_android_brusilodiana.ui.screen
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -22,16 +13,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.LibraryMusic
-import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -44,7 +26,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.Image
@@ -55,6 +36,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.domain.models.Track
+import com.example.playlist_maker_android_brusilodiana.ui.theme.Red
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.PlaylistViewModel
 import com.example.playlist_maker_android_brusilodiana.creator.Creator
 import kotlinx.coroutines.Dispatchers
@@ -84,13 +66,13 @@ fun TrackDetailsScreen(
     }
 
     Scaffold(
-        containerColor = colorResource(id = R.color.white),
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
                     Text(
                         text = stringResource(R.string.track_details_screen_title),
-                        color = colorResource(id = R.color.black),
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 20.sp
                     )
                 },
@@ -99,12 +81,12 @@ fun TrackDetailsScreen(
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back_button),
-                            tint = colorResource(id = R.color.black)
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = colorResource(id = R.color.white)
+                    containerColor = MaterialTheme.colorScheme.background
                 )
             )
         }
@@ -131,7 +113,7 @@ fun TrackDetailsScreen(
                             .size(200.dp)
                             .align(Alignment.CenterHorizontally)
                             .clip(RoundedCornerShape(8.dp))
-                            .background(colorResource(id = R.color.search_field_bg))
+                            .background(MaterialTheme.colorScheme.surface)
                     ) {
                         if (track.artworkUrl.isNotEmpty() && track.artworkUrl != "null") {
                             AsyncImage(
@@ -156,7 +138,7 @@ fun TrackDetailsScreen(
                         text = track.trackName,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = colorResource(id = R.color.black)
+                        color = MaterialTheme.colorScheme.onBackground
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -164,7 +146,7 @@ fun TrackDetailsScreen(
                     Text(
                         text = track.artistName,
                         fontSize = 16.sp,
-                        color = colorResource(id = R.color.gray)
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
 
                     Spacer(modifier = Modifier.height(32.dp))
@@ -178,14 +160,14 @@ fun TrackDetailsScreen(
                             modifier = Modifier
                                 .size(56.dp)
                                 .clip(CircleShape)
-                                .background(colorResource(id = R.color.gray))
+                                .background(MaterialTheme.colorScheme.primary)
                                 .clickable { showPlaylistSheet = true },
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Add,
                                 contentDescription = stringResource(R.string.add_to_playlist),
-                                tint = colorResource(id = R.color.white),
+                                tint = MaterialTheme.colorScheme.onPrimary,
                                 modifier = Modifier.size(24.dp)
                             )
                         }
@@ -194,7 +176,7 @@ fun TrackDetailsScreen(
                             modifier = Modifier
                                 .size(56.dp)
                                 .clip(CircleShape)
-                                .background(colorResource(id = R.color.gray))
+                                .background(MaterialTheme.colorScheme.primary)
                                 .clickable {
                                     MainScope().launch(Dispatchers.IO) {
                                         playlistViewModel.toggleFavorite(track, !isFavorite)
@@ -208,7 +190,7 @@ fun TrackDetailsScreen(
                                     stringResource(R.string.remove_from_favorites)
                                 else
                                     stringResource(R.string.add_to_favorites),
-                                tint = if (isFavorite) colorResource(id = R.color.red) else colorResource(id = R.color.white),
+                                tint = if (isFavorite) Red else MaterialTheme.colorScheme.onPrimary,
                                 modifier = Modifier.size(24.dp)
                             )
                         }
@@ -223,15 +205,16 @@ fun TrackDetailsScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.duration),
-                            fontSize = 14.sp,
-                            color = colorResource(id = R.color.gray)
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
 
                         Text(
                             text = track.trackTime,
-                            fontSize = 14.sp,
-                            color = colorResource(id = R.color.black),
-                            fontWeight = FontWeight.Medium
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
                     }
                 }
@@ -268,7 +251,7 @@ fun TrackPlaylistSelectionBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
-        containerColor = colorResource(id = R.color.white)
+        containerColor = MaterialTheme.colorScheme.surface
     ) {
         Column(
             modifier = Modifier
@@ -281,7 +264,7 @@ fun TrackPlaylistSelectionBottomSheet(
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = colorResource(id = R.color.black)
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -292,7 +275,7 @@ fun TrackPlaylistSelectionBottomSheet(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp,
-                    color = colorResource(id = R.color.gray)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                 )
             } else {
                 playlists.forEach { playlist ->
@@ -308,26 +291,39 @@ fun TrackPlaylistSelectionBottomSheet(
                                 .padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .background(
-                                        color = colorResource(id = R.color.white),
-                                        shape = RoundedCornerShape(8.dp)
-                                    )
-                                    .border(
-                                        width = 1.dp,
-                                        color = colorResource(id = R.color.gray),
-                                        shape = RoundedCornerShape(8.dp)
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.LibraryMusic,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(24.dp),
-                                    tint = colorResource(id = R.color.gray)
+                            if (playlist.coverImageUri != null) {
+                                AsyncImage(
+                                    model = Uri.parse(playlist.coverImageUri),
+                                    contentDescription = playlist.name,
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .clip(RoundedCornerShape(8.dp)),
+                                    contentScale = ContentScale.Crop,
+                                    placeholder = painterResource(id = R.drawable.ic_music),
+                                    error = painterResource(id = R.drawable.ic_music)
                                 )
+                            } else {
+                                Box(
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .background(
+                                            color = MaterialTheme.colorScheme.surface,
+                                            shape = RoundedCornerShape(8.dp)
+                                        )
+                                        .border(
+                                            width = 1.dp,
+                                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                                            shape = RoundedCornerShape(8.dp)
+                                        ),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.LibraryMusic,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(24.dp),
+                                        tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                                    )
+                                }
                             }
                             Spacer(modifier = Modifier.width(12.dp))
                             Column {
@@ -335,12 +331,23 @@ fun TrackPlaylistSelectionBottomSheet(
                                     text = playlist.name,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Medium,
-                                    color = colorResource(id = R.color.black)
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                val tracksCount = playlist.tracks.size
+                                val tracksSuffix = when {
+                                    tracksCount == 1 -> stringResource(R.string.tracks_suffix_single)
+                                    tracksCount in 2..4 -> stringResource(R.string.tracks_suffix_few)
+                                    else -> stringResource(R.string.tracks_suffix_many)
+                                }
+                                val tracksText = stringResource(
+                                    R.string.tracks_count,
+                                    tracksCount,
+                                    tracksSuffix
                                 )
                                 Text(
-                                    text = playlist.description,
+                                    text = tracksText,
                                     fontSize = 12.sp,
-                                    color = colorResource(id = R.color.gray)
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                                 )
                             }
                         }

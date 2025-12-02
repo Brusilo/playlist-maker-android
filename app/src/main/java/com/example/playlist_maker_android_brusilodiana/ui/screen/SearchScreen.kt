@@ -14,13 +14,10 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +31,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.domain.states.SearchState
 import com.example.playlist_maker_android_brusilodiana.ui.component.TrackListItemNew
+import com.example.playlist_maker_android_brusilodiana.ui.theme.SearchFieldBgLight
+import com.example.playlist_maker_android_brusilodiana.ui.theme.SearchFieldBgDark
+import com.example.playlist_maker_android_brusilodiana.ui.theme.Black
+import com.example.playlist_maker_android_brusilodiana.ui.theme.Gray
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.SearchViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,16 +53,46 @@ fun SearchScreen(
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val searchFieldBg = if (MaterialTheme.colorScheme.background == MaterialTheme.colorScheme.surface) {
+        SearchFieldBgLight
+    } else {
+        SearchFieldBgDark
+    }
+
+    val searchTextColor = if (MaterialTheme.colorScheme.background == MaterialTheme.colorScheme.surface) {
+        Black
+    } else {
+        MaterialTheme.colorScheme.onBackground
+    }
+
+    val searchPlaceholderColor = if (MaterialTheme.colorScheme.background == MaterialTheme.colorScheme.surface) {
+        Gray
+    } else {
+        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+    }
+
+    val historyTextColor = if (MaterialTheme.colorScheme.background == MaterialTheme.colorScheme.surface) {
+        Black
+    } else {
+        MaterialTheme.colorScheme.onBackground
+    }
+
+    val historyIconColor = if (MaterialTheme.colorScheme.background == MaterialTheme.colorScheme.surface) {
+        Gray
+    } else {
+        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.white))
+            .background(MaterialTheme.colorScheme.background)
     ) {
         TopAppBar(
             title = {
                 Text(
                     stringResource(R.string.search_screen_title),
-                    color = colorResource(id = R.color.black),
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 20.sp
                 )
             },
@@ -70,12 +101,12 @@ fun SearchScreen(
                     Icon(
                         Icons.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.back_button),
-                        tint = colorResource(id = R.color.black)
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = colorResource(id = R.color.white)
+                containerColor = MaterialTheme.colorScheme.background
             )
         )
 
@@ -92,7 +123,7 @@ fun SearchScreen(
                         viewModel.clearSearch()
                     }
                 },
-                placeholder = { Text(stringResource(R.string.search_placeholder)) },
+                placeholder = { Text(stringResource(R.string.search_placeholder), color = searchPlaceholderColor) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 interactionSource = interactionSource,
@@ -117,7 +148,7 @@ fun SearchScreen(
                         Icon(
                             imageVector = Icons.Filled.Search,
                             contentDescription = stringResource(R.string.search_icon),
-                            tint = colorResource(id = R.color.black)
+                            tint = searchTextColor
                         )
                     }
                 },
@@ -131,21 +162,25 @@ fun SearchScreen(
                             Icon(
                                 Icons.Filled.Clear,
                                 contentDescription = stringResource(R.string.clear_search),
-                                tint = colorResource(id = R.color.black)
+                                tint = searchTextColor
                             )
                         }
                     }
                 },
                 shape = RoundedCornerShape(8.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = colorResource(id = R.color.black),
-                    unfocusedTextColor = colorResource(id = R.color.black),
-                    focusedPlaceholderColor = colorResource(id = R.color.gray),
-                    unfocusedPlaceholderColor = colorResource(id = R.color.gray),
-                    focusedContainerColor = colorResource(R.color.search_field_bg),
-                    unfocusedContainerColor = colorResource(R.color.search_field_bg),
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent
+                    focusedTextColor = searchTextColor,
+                    unfocusedTextColor = searchTextColor,
+                    focusedPlaceholderColor = searchPlaceholderColor,
+                    unfocusedPlaceholderColor = searchPlaceholderColor,
+                    focusedContainerColor = searchFieldBg,
+                    unfocusedContainerColor = searchFieldBg,
+                    focusedBorderColor = searchFieldBg,
+                    unfocusedBorderColor = searchFieldBg,
+                    focusedTrailingIconColor = searchTextColor,
+                    unfocusedTrailingIconColor = searchTextColor,
+                    focusedLeadingIconColor = searchTextColor,
+                    unfocusedLeadingIconColor = searchTextColor
                 )
             )
 
@@ -153,21 +188,29 @@ fun SearchScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(
-                            color = colorResource(R.color.search_field_bg),
-                            shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
-                        )
+                        .offset(y = (-8).dp)
                 ) {
-                    Column {
-                        searchHistory.forEach { historyItem ->
-                            SearchHistoryItem(
-                                query = historyItem,
-                                onClick = {
-                                    query = historyItem
-                                    viewModel.search(historyItem)
-                                    keyboardController?.hide()
-                                }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = searchFieldBg,
+                                shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
                             )
+                    ) {
+                        Column {
+                            searchHistory.forEach { historyItem ->
+                                SearchHistoryItem(
+                                    query = historyItem,
+                                    textColor = historyTextColor,
+                                    iconColor = historyIconColor,
+                                    onClick = {
+                                        query = historyItem
+                                        viewModel.search(historyItem)
+                                        keyboardController?.hide()
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -186,7 +229,9 @@ fun SearchScreen(
                             .padding(top = 48.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator()
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.primary
+                        )
                     }
                 }
 
@@ -227,6 +272,8 @@ fun SearchScreen(
 @Composable
 fun SearchHistoryItem(
     query: String,
+    textColor: androidx.compose.ui.graphics.Color,
+    iconColor: androidx.compose.ui.graphics.Color,
     onClick: () -> Unit
 ) {
     Row(
@@ -239,7 +286,7 @@ fun SearchHistoryItem(
         Icon(
             imageVector = Icons.Filled.History,
             contentDescription = null,
-            tint = colorResource(id = R.color.gray),
+            tint = iconColor,
             modifier = Modifier.size(20.dp)
         )
 
@@ -248,7 +295,7 @@ fun SearchHistoryItem(
         Text(
             text = query,
             fontSize = 16.sp,
-            color = colorResource(id = R.color.black),
+            color = textColor,
             modifier = Modifier.weight(1f)
         )
     }
@@ -273,13 +320,13 @@ private fun EmptyResultScreen() {
             )
             Text(
                 stringResource(R.string.no_results),
-                color = colorResource(id = R.color.black),
+                color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 stringResource(R.string.no_results_subtitle),
-                color = colorResource(id = R.color.gray),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                 fontSize = 14.sp
             )
         }
@@ -313,13 +360,13 @@ private fun ErrorScreen(
             ) {
                 Text(
                     stringResource(R.string.search_error_title),
-                    color = colorResource(id = R.color.black),
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     errorMessage,
-                    color = colorResource(id = R.color.gray),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center
                 )
@@ -328,8 +375,8 @@ private fun ErrorScreen(
             Button(
                 onClick = onRetryClick,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(id = R.color.blue_background),
-                    contentColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             ) {
                 Text(stringResource(R.string.retry_button))
