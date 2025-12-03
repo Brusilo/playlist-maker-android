@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
 import com.example.playlist_maker_android_brusilodiana.R
-import com.example.playlist_maker_android_brusilodiana.data.ImageUtils
+import com.example.playlist_maker_android_brusilodiana.data.utils.ImageUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
