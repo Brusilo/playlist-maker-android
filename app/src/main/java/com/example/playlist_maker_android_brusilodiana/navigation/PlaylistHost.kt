@@ -2,9 +2,8 @@ package com.example.playlist_maker_android_brusilodiana.navigation
 
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -14,7 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.core.content.ContextCompat.startActivity
 import com.example.playlist_maker_android_brusilodiana.R
-import com.example.playlist_maker_android_brusilodiana.ui.activity.MainScreen
+import com.example.playlist_maker_android_brusilodiana.ui.screen.MainScreen
 import com.example.playlist_maker_android_brusilodiana.ui.screen.SearchScreen
 import com.example.playlist_maker_android_brusilodiana.ui.screen.SettingsScreen
 import com.example.playlist_maker_android_brusilodiana.ui.screen.PlaylistsScreen
@@ -36,14 +35,29 @@ import java.net.URLDecoder
 fun PlaylistHost(navController: NavHostController) {
     val context = LocalContext.current
 
+    var lastClickTime by remember { mutableStateOf(0L) }
+    val clickDelay = 500L
+
     fun navigateTo(screen: Screen) {
-        navController.navigate(screen.route) {
-            launchSingleTop = true
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - lastClickTime >= clickDelay) {
+            lastClickTime = currentTime
+            navController.navigate(screen.route) {
+                launchSingleTop = true
+                popUpTo(navController.graph.startDestinationId) {
+                    saveState = true
+                }
+                restoreState = true
+            }
         }
     }
 
     fun navigateUp() {
-        navController.popBackStack()
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - lastClickTime >= clickDelay) {
+            lastClickTime = currentTime
+            navController.popBackStack()
+        }
     }
 
     fun shareApp() {
