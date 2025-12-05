@@ -1,4 +1,4 @@
-package com.example.playlist_maker_android_brusilodiana.navigation
+package com.example.playlist_maker_android_brusilodiana.ui.navigation
 
 enum class Screen(val route: String) {
     Main("main"),

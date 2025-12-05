@@ -1,4 +1,4 @@
-package com.example.playlist_maker_android_brusilodiana.navigation
+package com.example.playlist_maker_android_brusilodiana.ui.navigation
 
 import android.content.Intent
 import android.net.Uri
@@ -25,7 +25,7 @@ import com.example.playlist_maker_android_brusilodiana.ui.view_model.SearchViewM
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.PlaylistViewModel
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.ThemeViewModel
 import com.example.playlist_maker_android_brusilodiana.data.preferences.ThemePreferences
-import com.example.playlist_maker_android_brusilodiana.creator.Creator
+import com.example.playlist_maker_android_brusilodiana.data.Creator
 import com.example.playlist_maker_android_brusilodiana.domain.models.Track
 import com.example.playlist_maker_android_brusilodiana.ui.theme.MyApplicationTheme
 import java.net.URLEncoder

@@ -28,7 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.playlist_maker_android_brusilodiana.R
 import com.example.playlist_maker_android_brusilodiana.ui.component.TrackListItemNew
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.PlaylistViewModel
-import com.example.playlist_maker_android_brusilodiana.creator.Creator
+import com.example.playlist_maker_android_brusilodiana.data.Creator
 import com.example.playlist_maker_android_brusilodiana.domain.models.Track
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -1,4 +1,4 @@
-package com.example.playlist_maker_android_brusilodiana.creator
+package com.example.playlist_maker_android_brusilodiana.data
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -8,9 +8,9 @@ import com.example.playlist_maker_android_brusilodiana.data.database.AppDatabase
 import com.example.playlist_maker_android_brusilodiana.data.network.ITunesApiService
 import com.example.playlist_maker_android_brusilodiana.data.network.RetrofitNetworkClient
 import com.example.playlist_maker_android_brusilodiana.data.preferences.SearchHistoryPreferences
-import com.example.playlist_maker_android_brusilodiana.data.repository.TracksRepositoryImpl
 import com.example.playlist_maker_android_brusilodiana.data.repository.PlaylistsRepositoryImpl
 import com.example.playlist_maker_android_brusilodiana.data.repository.SearchHistoryRepositoryImpl
+import com.example.playlist_maker_android_brusilodiana.data.repository.TracksRepositoryImpl
 import com.example.playlist_maker_android_brusilodiana.domain.PlaylistsRepository
 import com.example.playlist_maker_android_brusilodiana.domain.SearchHistoryRepository
 import com.example.playlist_maker_android_brusilodiana.domain.TracksRepository
@@ -63,7 +63,7 @@ object Creator {
             appDatabase = Room.databaseBuilder(
                 context,
                 AppDatabase::class.java,
-                AppDatabase.DATABASE_NAME
+                AppDatabase.Companion.DATABASE_NAME
             )
                 .fallbackToDestructiveMigration()
                 .build()
@@ -73,7 +73,7 @@ object Creator {
 
     fun getSearchHistoryPreferences(context: Context): SearchHistoryPreferences {
         if (searchHistoryPreferences == null) {
-            searchHistoryPreferences = SearchHistoryPreferences.create(context)
+            searchHistoryPreferences = SearchHistoryPreferences.Companion.create(context)
         }
         return searchHistoryPreferences!!
     }

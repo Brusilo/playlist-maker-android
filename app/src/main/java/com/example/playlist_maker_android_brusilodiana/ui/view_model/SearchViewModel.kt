@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.playlist_maker_android_brusilodiana.R
-import com.example.playlist_maker_android_brusilodiana.creator.Creator
+import com.example.playlist_maker_android_brusilodiana.data.Creator
 import com.example.playlist_maker_android_brusilodiana.domain.SearchHistoryRepository
 import com.example.playlist_maker_android_brusilodiana.domain.TracksRepository
 import com.example.playlist_maker_android_brusilodiana.domain.states.SearchState

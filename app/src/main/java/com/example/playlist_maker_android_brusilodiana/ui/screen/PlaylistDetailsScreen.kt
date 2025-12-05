@@ -35,7 +35,7 @@ import com.example.playlist_maker_android_brusilodiana.domain.models.Playlist
 import com.example.playlist_maker_android_brusilodiana.domain.models.Track
 import com.example.playlist_maker_android_brusilodiana.ui.component.TrackListItemNew
 import com.example.playlist_maker_android_brusilodiana.ui.view_model.PlaylistViewModel
-import com.example.playlist_maker_android_brusilodiana.creator.Creator
+import com.example.playlist_maker_android_brusilodiana.data.Creator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.net.URLEncoder
