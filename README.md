@@ -27,7 +27,32 @@
 1. **Клонирование репозитория**
    ```bash
    git clone https://github.com/Brusilo/playlist-maker-android-BrusiloDiana.git
-   cd playlist-maker-android-BrusiloDiana
+   
+2. **Открытие проекта в Android Studio**
+
+- Откройте Android Studio версии 2025.2.1 или новее
+
+- Выберите "Open" и укажите папку проекта, которая была создана после клонирования
+
+3. **Синхронизация Gradle**
+
+- Дождитесь завершения синхронизации зависимостей
+
+- При необходимости обновите Gradle и зависимости
+
+4. **Сборка проекта**
+
+- Выберите сборку в меню Build → Make Project (Ctrl+F9)
+
+- Убедитесь, что сборка завершена без ошибок
+
+5. **Запуск на эмуляторе или устройстве**
+
+- Подключите Android-устройство с Android 10+ и включенной отладкой по USB
+
+- Или создайте/запустите эмулятор Android 10+ в AVD Manager
+
+- Нажмите Run → Run 'app' (Shift+F10)
 
 ## Чек-листы
 - [Final-Project-Checklist](checklists/Final-Project-Checklist.md)
