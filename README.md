@@ -26,7 +26,7 @@
 
 1. **Клонирование репозитория**
    ```bash
-   git clone https://github.com/Brusilo/playlist-maker-android-BrusiloDiana.git
+   git clone https://github.com/Brusilo/playlist-maker-android.git
    
 2. **Открытие проекта в Android Studio**
 
