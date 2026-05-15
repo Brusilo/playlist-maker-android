@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['screen_0',['Screen',['../enumcom_1_1example_1_1playlist__maker__android__brusilodiana_1_1ui_1_1navigation_1_1_screen.html',1,'com::example::playlist_maker_android_brusilodiana::ui::navigation']]],
+  ['searchactivity_1',['Задача 1 — SearchActivity',['../md_checklists_2sprint-4.html#autotoc_md24',1,'']]],
+  ['searchhistorypreferences_2',['SearchHistoryPreferences',['../classcom_1_1example_1_1playlist__maker__android__brusilodiana_1_1data_1_1preferences_1_1_search_history_preferences.html',1,'com::example::playlist_maker_android_brusilodiana::data::preferences']]],
+  ['searchhistorypreferenceskt_3',['SearchHistoryPreferencesKt',['../classcom_1_1example_1_1playlist__maker__android__brusilodiana_1_1data_1_1preferences_1_1_search_history_preferences_kt.html',1,'com::example::playlist_maker_android_brusilodiana::data::preferences']]],
+  ['searchhistoryrepository_4',['SearchHistoryRepository',['../interfacecom_1_1example_1_1playlist__maker__android__brusilodiana_1_1domain_1_1_search_history_repository.html',1,'com::example::playlist_maker_android_brusilodiana::domain']]],
+  ['searchhistoryrepositoryimpl_5',['SearchHistoryRepositoryImpl',['../classcom_1_1example_1_1playlist__maker__android__brusilodiana_1_1data_1_1repository_1_1_search_history_repository_impl.html',1,'com::example::playlist_maker_android_brusilodiana::data::repository']]],
+  ['searchscreen_20compose_6',['Задача 2 — SearchScreen (Compose)',['../md_checklists_2sprint-6.html#autotoc_md35',1,'']]],
+  ['searchscreenkt_7',['SearchScreenKt',['../classcom_1_1example_1_1playlist__maker__android__brusilodiana_1_1ui_1_1screen_1_1_search_screen_kt.html',1,'com::example::playlist_maker_android_brusilodiana::ui::screen']]],
+  ['searchstate_8',['SearchState',['../classcom_1_1example_1_1playlist__maker__android__brusilodiana_1_1domain_1_1states_1_1_search_state.html',1,'com::example::playlist_maker_android_brusilodiana::domain::states']]],
+  ['searchviewmodel_9',['SearchViewModel',['../md_checklists_2sprint-6.html#autotoc_md34',1,'Задача 1 — SearchViewModel'],['../classcom_1_1example_1_1playlist__maker__android__brusilodiana_1_1ui_1_1view__model_1_1_search_view_model.html',1,'com.example.playlist_maker_android_brusilodiana.ui.view_model.SearchViewModel']]],
+  ['settingsactivity_10',['Задача 2 — SettingsActivity',['../md_checklists_2sprint-4.html#autotoc_md25',1,'']]],
+  ['settingsscreenkt_11',['SettingsScreenKt',['../classcom_1_1example_1_1playlist__maker__android__brusilodiana_1_1ui_1_1screen_1_1_settings_screen_kt.html',1,'com::example::playlist_maker_android_brusilodiana::ui::screen']]],
+  ['songs_12',['Экран поиска (Songs)',['../md_checklists_2sprint-8.html#autotoc_md48',1,'']]],
+  ['sprint_2010_13',['Sprint 10',['../md_checklists_2sprint-10.html',1,'Checklist — Sprint 10'],['../md_checklists_2_final-_project-_checklist.html#autotoc_md8',1,'Sprint-10']]],
+  ['sprint_2012_14',['Sprint 12',['../md_checklists_2sprint-12.html',1,'Checklist — Sprint 12'],['../md_checklists_2_final-_project-_checklist.html#autotoc_md9',1,'Sprint-12']]],
+  ['sprint_203_15',['Sprint 3',['../md_checklists_2sprint-3.html',1,'Checklist — Sprint 3'],['../md_checklists_2_final-_project-_checklist.html#autotoc_md1',1,'Sprint-3']]],
+  ['sprint_204_16',['Sprint 4',['../md_checklists_2sprint-4.html',1,'Checklist — Sprint 4'],['../md_checklists_2_final-_project-_checklist.html#autotoc_md2',1,'Sprint-4']]],
+  ['sprint_205_17',['Sprint 5',['../md_checklists_2sprint-5.html',1,'Checklist — Sprint 5'],['../md_checklists_2_final-_project-_checklist.html#autotoc_md3',1,'Sprint-5']]],
+  ['sprint_206_18',['Sprint 6',['../md_checklists_2sprint-6.html',1,'Checklist — Sprint 6'],['../md_checklists_2_final-_project-_checklist.html#autotoc_md4',1,'Sprint-6']]],
+  ['sprint_207_19',['Sprint 7',['../md_checklists_2sprint-7.html',1,'Checklist — Sprint 7'],['../md_checklists_2_final-_project-_checklist.html#autotoc_md5',1,'Sprint-7']]],
+  ['sprint_208_20',['Sprint 8',['../md_checklists_2sprint-8.html',1,'Checklist — Sprint 8'],['../md_checklists_2_final-_project-_checklist.html#autotoc_md6',1,'Sprint-8']]],
+  ['sprint_209_21',['Sprint 9',['../md_checklists_2sprint-9.html',1,'Checklist — Sprint 9'],['../md_checklists_2_final-_project-_checklist.html#autotoc_md7',1,'Sprint-9']]]
+];
